@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-mux6uj
+      - CU-muxe8v_Create-homepage
 
 jobs:
   build:
