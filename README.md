@@ -7,6 +7,16 @@ Website for users to chat with each other.
 * TypeScript
 * HTML5
 * CSS3
+* ClickUp
+
+## Task Completion Process
+1. Go to ClickUp and pick a task to complete.
+2. Copy the task id without the `#` and create a branch with the name: `CU-[taskId]` where `[taskId]` is the task id in ClickUp.
+3. Update the branch name in the stage workflow file to the name of the created branch.
+4. See the pull request on GitHub and make sure the title matches the branch name.
+4. Create a pull request and wait for the CI/CD process to complete.
+5. Request reviews from appropriate members.
+6. When all members approve of the pull request, merge the pull request using the `squash and merge` option.
 
 ## Getting Started
 
