@@ -1,0 +1,11 @@
+version: "3"
+
+services: 
+  app:
+    container_name: chatterus-backend
+    restart: always
+    build: .
+    environment: 
+      - PORT=4000
+    ports: 
+      - "4000:4000"
