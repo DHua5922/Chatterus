@@ -11,14 +11,18 @@ const app = express();
 InitiateMongoServer();
 
 // Allow chatterus website to use the API
-app.use(cors({
+const corsConfig = cors({
     origin: [
         "http://localhost:3000", 
-        "https://chatterus-stage.herokuapp.com/", 
-        "https://chatterus-production.herokuapp.com/"
+        "https://chatterus-stage.herokuapp.com", 
+        "https://chatterus-production.herokuapp.com"
     ],
-    credentials: true 
-}));
+    credentials: true,
+    methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"], 
+});
+app.options("/.*", corsConfig);
+app.use(corsConfig);
 
 // Middleware
 app.use(bodyParser.json());

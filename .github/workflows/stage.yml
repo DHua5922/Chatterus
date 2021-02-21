@@ -3,7 +3,7 @@ name: Deploy To Heroku (stage)
 on:
   push:
     branches:
-      - CU-n513f6_Create-Sign-Up-API
+      - CU-n8zqyd_Fix-cors-issue
 
 jobs:
   build:
