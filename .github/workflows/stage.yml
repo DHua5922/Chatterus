@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-n513h3_Create-Sign-Up-Page
+      - CU-n9055a_Fix-homepage-UI-in-mobile
 
 jobs:
   build:

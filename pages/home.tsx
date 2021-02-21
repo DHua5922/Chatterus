@@ -21,9 +21,9 @@ const sections = [
             header: "Chat with everyone you know.",
             description: "It is easy to stay in touch.",
             classes: {
-                container: "w-max m-auto",
-                header: "text-5xl pb-20",
-                description: "text-2xl text-center",
+                container: "w-max m-auto text-lg",
+                header: "sm:text-2xl md:text-3xl pb-20",
+                description: "sm:text-xl md:text-2xl text-center",
             },
         }
     },
@@ -33,9 +33,9 @@ const sections = [
             header: "Group Message",
             description: "It is like your own private chat room. Chat with your friends without other strangers knowing about it.",
             classes: {
-                container: "w-2/6 m-auto text-center",
-                header: "text-5xl",
-                description: "text-2xl pt-12",
+                container: "w-2/6 m-auto text-lg",
+                header: "sm:text-2xl md:text-3xl text-center",
+                description: "sm:text-xl md:text-2xl pt-12",
             },
         }
     },
@@ -43,7 +43,7 @@ const sections = [
 
 export default function Homepage() {
     return (
-        <>
+        <div className="min-w-min">
             <Title title="Home" />
             <Navbar />
             {
@@ -56,6 +56,6 @@ export default function Homepage() {
                     );
                 })
             }
-        </>
+        </div>
     );
 }

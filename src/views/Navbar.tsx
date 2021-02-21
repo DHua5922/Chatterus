@@ -14,7 +14,7 @@ const Nav = tw.ul`
     items-center
     flex
     justify-center
-    py-8	
+    p-8	
     bg-gray-700	
     text-white
 `;
@@ -48,7 +48,7 @@ export default function Navbar() {
         <Nav>
             <Brand label={"Chatterus"} />
             <div className="px-12" />
-            <div className="grid grid-cols-2 gap-4">
+            <div className="flex grid-cols-2 gap-4">
                 {links.map(link => <NavLink {...link} />)}
             </div>
         </Nav>
