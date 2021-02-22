@@ -21,6 +21,10 @@ const messages = {
         invalid: "Please enter a valid email",
         already_exists: "That email has been taken",
     },
+    login: {
+        error: "Incorrect username, email, and/or password",
+        success: "Login successful!",
+    },
 };
 
 export default module.exports = {

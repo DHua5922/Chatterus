@@ -56,5 +56,18 @@ export default class UserService {
         });
         await user.save();
         return user;
+    } 
+
+    /**
+     * Gets the user by username or email.
+     * 
+     * @param {string} usernameOrEmail Username or email.
+     * @return {Promise<Document<any>>}
+     */
+    static async getUserByEmailOrUsername(usernameOrEmail: string) {
+        return User.findOne({ $or: [
+            { email: usernameOrEmail },
+            { username: usernameOrEmail },
+        ]});
     }
 }

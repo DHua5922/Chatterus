@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import InitiateMongoServer from "./config/database";
 import user from "./routes/user";
+import auth from "./routes/authentication";
 import cors from "cors";
 import bodyParser from "body-parser";
 
@@ -34,6 +35,7 @@ app.get("/", (req, res) => {
 
 // API routes
 app.use("/user", user);
+app.use("/auth", auth);
 
 // Start the Express server
 const PORT = process.env.PORT || 4000; // default port to listen

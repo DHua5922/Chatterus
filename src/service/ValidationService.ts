@@ -1,3 +1,5 @@
+import bcrypt from "bcryptjs";
+
 /**
  * This services manages validation.
  */
@@ -45,5 +47,20 @@ export default class ValidationService {
      */
     static isMatchingPassword(password: string, cpassword: string): boolean {
         return password === cpassword;
+    }
+
+    /**
+     * Checks if the unencrypted password matches the encrypted password.
+     * 
+     * @param {string} password Unencrypted password.
+     * @param {string} encryptedPassword Encrypted password.
+     * @return {Promise<boolean>} Promise<true> if the unencrypted password 
+     *      matches the encrypted password, or Promise<false>.
+     */
+    static async isMatchingUserPassword(
+        password: string, 
+        encryptedPassword: string
+    ): Promise<boolean> {
+        return bcrypt.compare(password, encryptedPassword);
     }
 };
