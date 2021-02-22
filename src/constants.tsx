@@ -1,6 +1,7 @@
 export const pageLinks = {
     login: "/login",
     signup: "/signup",
+    dashboard: "/dashboard",
 };
 
 export const apiLinks = {
@@ -13,6 +14,7 @@ export const redux = {
     PENDING: "PENDING",
     SUCCESS: "SUCCESS",
     FAIL: "FAIL",
+    UPDATE_USERNAME_OR_EMAIL: "UPDATE_USERNAME_OR_EMAIL",
     UPDATE_USERNAME: "UPDATE_USERNAME",
     UPDATE_EMAIL: "UPDATE_EMAIL",
     UPDATE_PASSWORD: "UPDATE_PASSWORD",
