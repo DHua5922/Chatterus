@@ -8,6 +8,8 @@ export default class CookieService {
     private static cookieOptions: CookieOptions = { 
         httpOnly: true, 
         maxAge: 7 * 24 * 3600 * 1000, // expires in 1 week
+        sameSite: "none",
+        secure: true,
     };
 
     /**
@@ -25,7 +27,7 @@ export default class CookieService {
         const { maxAge, ...rest } = options;
         this.createCookie(
             res, 
-            process.env.ACCESS_COOKIE, 
+            "accessCookie", 
             TokenService.createToken(tokenPayload), 
             { 
                 ...rest, 
@@ -48,7 +50,7 @@ export default class CookieService {
     ) {
         this.createCookie(
             res, 
-            process.env.REFRESH_COOKIE, 
+            "refreshCookie", 
             TokenService.createToken(tokenPayload), 
             options
         );
