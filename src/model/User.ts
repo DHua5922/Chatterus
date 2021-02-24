@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema({
     },
     chats: [{
         type: constants.mongo.ObjectId,
-        default: [],
+        ref: constants.mongo.Collections.Chat,
     }],
 });
 

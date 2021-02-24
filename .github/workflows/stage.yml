@@ -3,7 +3,7 @@ name: Deploy To Heroku (stage)
 on:
   push:
     branches:
-      - CU-nd6pw4_Authenticate-request
+      - CU-nd2zcq_Create-API-for-getting-chats
 
 jobs:
   build:

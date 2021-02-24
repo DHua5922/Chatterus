@@ -69,4 +69,14 @@ export default class TokenService {
     static getRefreshTokenInRequest(req: any) {
         return req.cookies[CookieService.REFRESH_COOKIE];
     }
+
+    /**
+     * Gets the user id in the token.
+     * 
+     * @param {string} token Encrypted token. 
+     * @return {string} User id.
+     */
+    static getUserIdFromToken(token: string): string {
+        return this.decryptToken(token).user.id;
+    }
 }

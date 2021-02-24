@@ -8,11 +8,11 @@ export default class UserService {
     /**
      * Gets the user by id.
      * 
-     * @param {number} id User id.
+     * @param {string} id User id.
      * @return {Promise<Document<any>>} Promise with user document object.
      */
-    static async getUserById(id: number) {
-        return await User.findById(id);
+    static getUserById(id: string) {
+        return User.findById(id);
     }
 
     /**

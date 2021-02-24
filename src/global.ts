@@ -5,7 +5,10 @@ const mongo = {
     ObjectId: mongoose.Schema.Types.ObjectId,
     Collections: {
         User: "user",
+        Chat: "chat",
+        Message: "message",
     },
+    includedUserFields: "username email createdAt _id",
 };
 
 const messages = {
