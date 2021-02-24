@@ -5,6 +5,8 @@ import user from "./routes/user";
 import auth from "./routes/authentication";
 import cors from "cors";
 import bodyParser from "body-parser";
+import chat from "./routes/chat";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -12,6 +14,9 @@ const app = express();
 
 // Initiate Mongo Server
 InitiateMongoServer();
+
+// Read cookies
+app.use(cookieParser());
 
 // Allow chatterus website to use the API
 const corsConfig = cors({
@@ -38,6 +43,7 @@ app.get("/", (req, res) => {
 // API routes
 app.use("/user", user);
 app.use("/auth", auth);
+app.use("/chat", chat);
 
 // Start the Express server
 const PORT = process.env.PORT || 4000; // default port to listen

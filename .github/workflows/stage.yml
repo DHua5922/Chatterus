@@ -3,7 +3,7 @@ name: Deploy To Heroku (stage)
 on:
   push:
     branches:
-      - CU-nb16vb_Set-cookies-properly
+      - CU-nd6pw4_Authenticate-request
 
 jobs:
   build:

@@ -5,6 +5,8 @@ import TokenService from "./TokenService";
  * This service manages cookies.
  */
 export default class CookieService {
+    static ACCESS_COOKIE: string = "accessCookie";
+    static REFRESH_COOKIE: string = "refreshCookie";
     private static cookieOptions: CookieOptions = { 
         httpOnly: true, 
         maxAge: 7 * 24 * 3600 * 1000, // expires in 1 week
@@ -27,7 +29,7 @@ export default class CookieService {
         const { maxAge, ...rest } = options;
         this.createCookie(
             res, 
-            "accessCookie", 
+            this.ACCESS_COOKIE, 
             TokenService.createToken(tokenPayload), 
             { 
                 ...rest, 
@@ -50,7 +52,7 @@ export default class CookieService {
     ) {
         this.createCookie(
             res, 
-            "refreshCookie", 
+            this.REFRESH_COOKIE, 
             TokenService.createToken(tokenPayload), 
             options
         );

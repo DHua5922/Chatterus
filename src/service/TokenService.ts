@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import CookieService from "./CookieService";
 
 /**
  * This service manages tokens.
@@ -8,6 +9,8 @@ import jwt from "jsonwebtoken";
  * easy to retrieve the information.
  */
 export default class TokenService {
+    private static readonly SECRET_KEY = "randomString";
+
     /**
      * Creates a token payload that has the given 
      * information to put in the token.
@@ -35,5 +38,35 @@ export default class TokenService {
             "randomString", {
                 expiresIn: 10000
             });
+    }
+
+    /**
+     * Decrypts the token.
+     * 
+     * @param {string} token Encrypted token. 
+     * @return {any} Token information.
+     */
+    static decryptToken(token: string): any {
+        return jwt.verify(token, this.SECRET_KEY);
+    }
+
+    /**
+     * Gets the access token in the request.
+     * 
+     * @param {any} req Request.
+     * @return {string} Access token in the request.
+     */
+    static getAccessTokenInRequest(req: any) {
+        return req.cookies[CookieService.ACCESS_COOKIE];
+    }
+
+    /**
+     * Gets the refresh token in the request.
+     * 
+     * @param {any} req Request.
+     * @return {string} Refresh token in the request. 
+     */
+    static getRefreshTokenInRequest(req: any) {
+        return req.cookies[CookieService.REFRESH_COOKIE];
     }
 }
