@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-n90h5j_Create-login-page
+      - CU-nd2zfj_Create-Dashboard-page
 
 jobs:
   build:
