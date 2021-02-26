@@ -1,3 +1,5 @@
+import AuthService from "./api/services/AuthService";
+
 export const pageLinks = {
     login: "/login",
     signup: "/signup",
@@ -8,6 +10,7 @@ export const apiLinks = {
     baseUrl: (process.env.NODE_ENV === 'production') 
         ? "https://chatterus-backend.herokuapp.com/" 
         : "http://localhost:4000/",
+    refreshToken: `${AuthService.API_BASE}refreshtoken`,
 };
 
 export const redux = {
