@@ -36,4 +36,21 @@ router.post("/login", async (req, res) => {
     }
 });
 
+router.post("/refreshtoken", async (req, res) => {
+    try {
+        const refreshToken = TokenService.getRefreshTokenInRequest(req);
+        const userId = TokenService.getUserIdFromToken(refreshToken);
+        const tokenPayload = TokenService.createPayload(userId);
+        CookieService.createAccessCookie(res, tokenPayload);
+        CookieService.createRefreshCookie(res, tokenPayload);
+        res.status(200).json({
+            message: "Token has been refreshed.",
+        });
+    } catch(e) {
+        res.status(401).json({
+            message: "Invalid refresh token.",
+        });
+    }
+});
+
 export default module.exports = router;
