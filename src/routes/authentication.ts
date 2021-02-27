@@ -36,6 +36,14 @@ router.post("/login", async (req, res) => {
     }
 });
 
+router.post("/logout", async (req, res) => {
+    CookieService.deleteAccessCookie(res);
+    CookieService.deleteRefreshCookie(res);
+    res.status(200).json({
+        message: "You have been logged out.",
+    });
+});
+
 router.post("/refreshtoken", async (req, res) => {
     try {
         const refreshToken = TokenService.getRefreshTokenInRequest(req);

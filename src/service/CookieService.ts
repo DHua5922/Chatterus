@@ -74,4 +74,31 @@ export default class CookieService {
     ) {
         res.cookie(name, value, options);
     }
+
+    /**
+     * Deletes the cookie storing the access token.
+     * 
+     * @param {Response} res Response that will be sent to the client. 
+     */
+    static deleteAccessCookie(res: Response) {
+        this.deleteCookie(res, this.ACCESS_COOKIE);
+    }
+
+    /**
+     * Deletes the cookie storing the refresh token.
+     * 
+     * @param {Response} res Response that will be sent to the client. 
+     */
+    static deleteRefreshCookie(res: Response) {
+        this.deleteCookie(res, this.REFRESH_COOKIE);
+    }
+
+    /**
+     * Deletes the cookie with the given name in the request.
+     * 
+     * @param {Response} res Response that will be sent to the client. 
+     */
+    static deleteCookie(res: Response, name: string) {
+        res.cookie(name, "", {maxAge: 0});
+    }
 }
