@@ -18,6 +18,7 @@ const Chat = tw.div`
 const ListContainer = tw.div`
     w-1/6
     border-r
+    border-l
 `;
 
 function ChatPreview({ title, latestMsg, styles }) {

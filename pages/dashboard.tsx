@@ -4,6 +4,7 @@ import userActions from "../src/redux/actions/UserAction";
 import UserReducer, { initialUserState } from "../src/redux/reducers/UserReducer";
 import ChatList from "../src/views/ChatList";
 import ChosenChat from "../src/views/ChosenChat";
+import Sidenav from "../src/views/Sidenav";
 
 export default function DashboardPage() {
     const [userInfo, dispatchUserInfo] = useReducer(UserReducer, initialUserState);
@@ -29,6 +30,7 @@ export default function DashboardPage() {
 
     return (
         <div className="flex w-full h-full">
+            <Sidenav />
             <ChatList chats={userInfo.chats ? userInfo.chats : []} />
             <ChosenChat chat={userInfo.chosenChat} />
         </div>

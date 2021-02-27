@@ -25,4 +25,13 @@ export default class AuthService {
     static refreshToken() {
         return axios.post(apiLinks.refreshToken);
     }
+
+    /**
+     * Logs the user out.
+     * 
+     * @return {Promise<AxiosResponse<any>>} Promise with API response.
+     */
+    static logout() {
+        return axios.post(`${this.API_BASE}logout`);
+    }
 }

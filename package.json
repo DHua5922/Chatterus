@@ -11,6 +11,7 @@
     "docker-start": "npm run docker-build && npm run docker-run"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.3",
     "axios": "^0.21.1",
     "next": "10.0.6",
     "react": "17.0.1",
