@@ -1,9 +1,11 @@
 import AuthService from "./api/services/AuthService";
+import UserService from "./api/services/UserService";
 
 export const pageLinks = {
     login: "/login",
     signup: "/signup",
     dashboard: "/dashboard",
+    profile: "/profile",
 };
 
 export const apiLinks = {
@@ -11,6 +13,7 @@ export const apiLinks = {
         ? "https://chatterus-backend.herokuapp.com/" 
         : "http://localhost:4000/",
     refreshToken: `${AuthService.API_BASE}refreshtoken`,
+    profile: `${UserService.API_BASE}profile`,
 };
 
 export const redux = {

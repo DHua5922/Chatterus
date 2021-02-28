@@ -8,9 +8,11 @@ import { useRouter } from "next/router";
 import { pageLinks } from "../constants";
 import LoadReducer, { initialLoadState } from "../redux/reducers/LoadReducer";
 import loadActions from "../redux/actions/LoadAction";
+import { Profile } from "@styled-icons/icomoon/Profile";
 
 const Container = tw.div`
     p-4
+    border-r
 `;
 
 const BottomList = tw.div`
@@ -21,6 +23,9 @@ const LogOutIcon = tw(LogOut)`
     w-7
 `;
 const ChatIcon = tw(ChatLeftTextFill)`
+    w-7
+`;
+const ProfileIcon = tw(Profile)`
     w-7
 `;
 
@@ -43,8 +48,15 @@ export default function Sidenav({ topList=topItems, bottomList=bottomItems }) {
         {
             icon: <ChatIcon />,
             props: {
-                onClick: () => {},
-                className: "cursor-pointer",
+                onClick: () => router.push(pageLinks.dashboard),
+                className: "cursor-pointer py-2",
+            },
+        },
+        {
+            icon: <ProfileIcon />,
+            props: {
+                onClick: () => router.push(pageLinks.profile),
+                className: "cursor-pointer py-2",
             },
         }
     ];

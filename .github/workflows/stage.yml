@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-nq6wmr_Allow-user-to-logout
+      - CU-nt4882_Create-profile-page
 
 jobs:
   build:
