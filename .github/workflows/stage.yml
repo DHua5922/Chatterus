@@ -3,7 +3,7 @@ name: Deploy To Heroku (stage)
 on:
   push:
     branches:
-      - CU-nq6w55_Create-logout-API
+      - CU-nt4874_Create-update-profile-API
 
 jobs:
   build:

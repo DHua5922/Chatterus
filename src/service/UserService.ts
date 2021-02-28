@@ -70,4 +70,15 @@ export default class UserService {
             { username: usernameOrEmail },
         ]});
     }
+
+    /**
+     * Updates the user's profile.
+     * 
+     * @param {string} _id User id.
+     * @param {{{username: string, email: string}}} newProfile New profile.
+     * @return {Promise<Document<any>>}
+     */
+    static updateProfile(_id: string, newProfile: {username: string, email: string}) {
+        return User.updateOne({_id}, newProfile);
+    }
 }

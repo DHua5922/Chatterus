@@ -3,6 +3,8 @@ import UserService from "../service/UserService";
 import jwt from "jsonwebtoken";
 import global from "../global";
 import ValidationService from "../service/ValidationService";
+import auth from "../middleware/auth";
+import TokenService from "../service/TokenService";
 
 const router = express.Router();
 
@@ -72,6 +74,59 @@ router.post("/signup", async (req, res) => {
             });
         }
     );
+});
+
+router.get("/profile", auth, async (req, res) => {
+    const token = TokenService.getAccessTokenInRequest(req);
+    const userId = TokenService.getUserIdFromToken(token);
+    const user: any = await UserService.getUserById(userId);
+    const { username, email }: any = user;
+    res.status(200).json({ username, email });
+});
+
+router.put("/profile", auth, async (req, res) => {
+    const token = TokenService.getAccessTokenInRequest(req);
+    const userId = TokenService.getUserIdFromToken(token);
+    const user: any = await UserService.getUserById(userId);
+
+    let { username, email } = req.body;
+    const responseMsg = {
+        username_error: [] as string[],
+        email_error: [] as string[],
+        username_success: [] as string[],
+        email_success: [] as string[],
+    };
+
+    // Check for errors in new profile
+    if(!ValidationService.isValidUsername(username)) {
+        // Invalid username
+        responseMsg.username_error.push(global.messages.username.invalid_length);
+    }
+    if(await UserService.getUserByUsername(username)) {
+        // Username already exists
+        responseMsg.username_error.push(global.messages.username.already_exists);
+    }
+    if(!ValidationService.isValidEmail(email)) {
+        // Invalid email
+        responseMsg.email_error.push(global.messages.email.invalid);
+    }
+    if(await UserService.getUserByEmail(email)) {
+        // Email already exists
+        responseMsg.email_error.push(global.messages.email.already_exists);
+    }
+    
+    // Update profile
+    if(responseMsg.username_error.length === 0)
+        responseMsg.username_success.push("Username updated.");
+    else
+        username = user.username;
+    if(responseMsg.email_error.length === 0)
+        responseMsg.email_success.push("Email updated.");
+    else
+        email = user.email;
+    await UserService.updateProfile(userId, {username, email});
+    
+    res.status(200).json(responseMsg);
 });
 
 export default module.exports = router;
