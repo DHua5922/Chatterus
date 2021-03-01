@@ -7,6 +7,7 @@ const mongo = {
         User: "user",
         Chat: "chat",
         Message: "message",
+        PastUser: "past_user",
     },
     includedUserFields: "username email createdAt _id",
 };

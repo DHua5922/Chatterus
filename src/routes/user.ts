@@ -129,4 +129,11 @@ router.put("/profile", auth, async (req, res) => {
     res.status(200).json(responseMsg);
 });
 
+router.delete("/", auth, async (req, res) => {
+    const token = TokenService.getAccessTokenInRequest(req);
+    const userId = TokenService.getUserIdFromToken(token);
+    await UserService.deleteUser(userId);
+    res.status(200).json({ message: "Your account has been deleted." });
+});
+
 export default module.exports = router;

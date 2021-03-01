@@ -1,5 +1,6 @@
 import User from "../model/User";
 import bcrypt from "bcryptjs";
+import PastUser from "../model/PastUser";
 
 /**
  * This service manages users in the database.
@@ -80,5 +81,16 @@ export default class UserService {
      */
     static updateProfile(_id: string, newProfile: {username: string, email: string}) {
         return User.updateOne({_id}, newProfile);
+    }
+
+    /**
+     * Deletes the user.
+     * 
+     * @param {string} _id User id.
+     * @return {Promise<Document<any>>}
+     */
+    static async deleteUser(_id: string) {
+        await PastUser.updateOne({_id}, await this.getUserById(_id));
+        return User.deleteOne({_id});
     }
 }

@@ -5,7 +5,7 @@ import constants from "../global";
 const MessageSchema = new mongoose.Schema({
     userId: {
         type: constants.mongo.ObjectId,
-        ref: constants.mongo.Collections.User,
+        ref: constants.mongo.Collections.PastUser,
         required: true
     },
     message: {

@@ -3,7 +3,7 @@ name: Deploy To Heroku (stage)
 on:
   push:
     branches:
-      - CU-nt4874_Create-update-profile-API
+      - CU-nt4894_Create-delete-account-API
 
 jobs:
   build:

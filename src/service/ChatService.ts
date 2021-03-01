@@ -1,8 +1,7 @@
-import User from "../model/User";
 import Chat from "../model/Chat";
 import Message from "../model/Message";
 import constants from "../global";
-import UserService from "./UserService";
+import PastUser from "../model/PastUser";
 
 export default class ChatService {
     /**
@@ -12,7 +11,7 @@ export default class ChatService {
      * @return {any} User's chats. 
      */
     static getUserChats(id: string) {
-        return UserService.getUserById(id)
+        return PastUser.findById(id)
             // get all user fields except password and __v
             .select("-password -__v")
             .populate({
@@ -27,7 +26,7 @@ export default class ChatService {
                         populate: {
                             // get user information for message
                             path: "userId", // replace id of user with user information
-                            model: User,
+                            model: PastUser,
                             select: constants.mongo.includedUserFields // get username, email, date registered, and user's id
                         },
                     },
