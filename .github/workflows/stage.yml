@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-nt4882_Create-profile-page
+      - CU-nt489w_Allow-user-to-delete-account
 
 jobs:
   build:

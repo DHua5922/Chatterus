@@ -35,4 +35,13 @@ export default class UserService {
     static updateProfile(updatedProfile: {username: string, email: string}) {
         return axios.put(apiLinks.profile, updatedProfile);
     }
+
+    /**
+     * Deletes the user.
+     * 
+     * @return {Promise<AxiosResponse<any>>} Promise with API response.
+     */
+    static deleteUser() {
+        return axios.delete(this.API_BASE);
+    }
 }

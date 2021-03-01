@@ -6,6 +6,7 @@ export const pageLinks = {
     signup: "/signup",
     dashboard: "/dashboard",
     profile: "/profile",
+    homepage: "/",
 };
 
 export const apiLinks = {
