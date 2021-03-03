@@ -2,6 +2,9 @@ import express from "express";
 import TokenService from "../service/TokenService";
 import UserService from "../service/UserService";
 import { format } from "date-fns";
+import ValidationService from "../service/ValidationService";
+import PasswordService from "../service/PasswordService";
+import constants from "../global";
 
 const router = express.Router();
 
@@ -41,6 +44,37 @@ router.post("/email", async (req, res) => {
         .catch(() => {
             res.status(400).json(errorMsg);
         })
+});
+
+router.post("/reset", async (req, res) => {
+    const { token, password, cpassword } = req.body;
+
+    // Check if new password is valid and link has not expired.
+    if(!ValidationService.isValidPasswordLength(password)) {
+        // Invalid password length
+        res.status(400).json({
+            message: constants.messages.password.invalid_length
+        });
+    }
+    if(!ValidationService.isMatchingPassword(password, cpassword)) {
+        // Password and confirm password do not match
+        res.status(400).json({
+            message: constants.messages.password.no_match
+        });
+    }
+    if(!TokenService.decryptToken(token)) {
+        res.status(401).json({
+            message: "Link expired"
+        });
+    }
+
+    // Update user's password with new password
+    const userId: string = await TokenService.getUserIdFromToken(token);
+    const encryptedPassword = await PasswordService.encryptPassword(password);
+    await UserService.updatePassword(userId, encryptedPassword);
+    res.status(200).json({
+        message: "Your password has been updated."
+    });
 });
 
 export default module.exports = router;

@@ -93,4 +93,15 @@ export default class UserService {
         await PastUser.updateOne({_id}, await this.getUserById(_id));
         return User.deleteOne({_id});
     }
+
+    /**
+     * Updates the user's password.
+     * 
+     * @param {string} _id User id.
+     * @param {string} password New password.
+     * @return {Promise<any>}
+     */
+    static async updatePassword(_id: string, password: string) {
+        return User.updateOne({_id}, {password});
+    }
 }
