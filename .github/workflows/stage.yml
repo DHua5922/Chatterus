@@ -3,7 +3,7 @@ name: Deploy To Heroku (stage)
 on:
   push:
     branches:
-      - CU-nt4894_Create-delete-account-API
+      - CU-nt48fa_Create-password-reset-link-API
 
 jobs:
   build:

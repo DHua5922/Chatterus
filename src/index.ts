@@ -7,6 +7,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import chat from "./routes/chat";
 import cookieParser from "cookie-parser";
+import password from "./routes/password";
 
 dotenv.config();
 
@@ -44,6 +45,7 @@ app.get("/", (req, res) => {
 app.use("/user", user);
 app.use("/auth", auth);
 app.use("/chat", chat);
+app.use("/password", password);
 
 // Start the Express server
 const PORT = process.env.PORT || 4000; // default port to listen
