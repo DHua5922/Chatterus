@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-nt489w_Allow-user-to-delete-account
+      - CU-nt48g0_Create-password-reset-link-page
 
 jobs:
   build:

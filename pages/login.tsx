@@ -1,12 +1,18 @@
 import { useRouter } from "next/router";
 import React, { useReducer } from "react";
-import AuthService from "../src/api/services/AuthService";
+import tw from "tailwind-styled-components";
+import axios from "axios";
 import { pageLinks } from "../src/constants";
 import loadActions from "../src/redux/actions/LoadAction";
 import loginActions from "../src/redux/actions/LoginAction";
 import LoadReducer, { initialLoadState } from "../src/redux/reducers/LoadReducer";
 import LoginReducer, { initialLoginState } from "../src/redux/reducers/LoginReducer";
 import MyForm from "../src/views/MyForm";
+
+const Link = tw.a`
+    underline
+    text-blue-500
+`;
 
 export default function loginPage() {
     const [loadState, dispatchLoadState] = useReducer(LoadReducer, initialLoadState);
@@ -73,6 +79,7 @@ export default function loginPage() {
                 message: loadState.isPending ? "Signing you in..." : "",
             },
         },
+        footer: <Link href={pageLinks.resetEmail}>Forgot password?</Link>,
     }
 
     const router = useRouter();
@@ -83,8 +90,8 @@ export default function loginPage() {
      */
     function login(userLogin) {
         dispatchLoadState(loadActions.pending());
-        AuthService
-            .login(userLogin)
+        axios
+            .post("auth/login", userLogin)
             .then(() => router.push(pageLinks.dashboard))
             .catch(error => {
                 if(error.response && error.response.status === 400) {
@@ -105,6 +112,7 @@ export default function loginPage() {
                 fields={properties.fields}
                 buttons={properties.buttons}
                 message={properties.message}
+                footer={properties.footer}
             />
         </div>
     );

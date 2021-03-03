@@ -1,4 +1,5 @@
 import AuthService from "./api/services/AuthService";
+import PasswordService from "./api/services/PasswordService";
 import UserService from "./api/services/UserService";
 
 export const pageLinks = {
@@ -7,6 +8,8 @@ export const pageLinks = {
     dashboard: "/dashboard",
     profile: "/profile",
     homepage: "/",
+    resetEmail: `/${PasswordService.API_BASE}email`,
+    resetPassword: `/${PasswordService.API_BASE}reset`,
 };
 
 export const apiLinks = {
@@ -15,6 +18,7 @@ export const apiLinks = {
         : "http://localhost:4000/",
     refreshToken: `${AuthService.API_BASE}refreshtoken`,
     profile: `${UserService.API_BASE}profile`,
+    sendResetLink: `${PasswordService.API_BASE}email`
 };
 
 export const redux = {

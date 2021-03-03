@@ -20,6 +20,7 @@ const defaultMessage = {
         message: "",
     },
 };
+const defaultFooter = <></>;
 
 const Header = tw.div`
     text-center
@@ -56,7 +57,8 @@ export default function MyForm({
     header=defaultHeader, 
     fields=defaultFields, 
     buttons=defaultButtons, 
-    message=defaultMessage 
+    message=defaultMessage,
+    footer=defaultFooter,
 }) {
     return (
         <Form {...form}>
@@ -79,6 +81,8 @@ export default function MyForm({
                     return <Button {...props}>{children}</Button>;
                 })
             }
+
+            { footer }
 
             { 
                 message.pending.isPending && 
