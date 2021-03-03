@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-nt48g0_Create-password-reset-link-page
+      - CU-nt48he_Create-password-reset-page
 
 jobs:
   build:

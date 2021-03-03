@@ -18,7 +18,8 @@ export const apiLinks = {
         : "http://localhost:4000/",
     refreshToken: `${AuthService.API_BASE}refreshtoken`,
     profile: `${UserService.API_BASE}profile`,
-    sendResetLink: `${PasswordService.API_BASE}email`
+    sendResetLink: `${PasswordService.API_BASE}email`,
+    resetPassword: `${PasswordService.API_BASE}reset`,
 };
 
 export const redux = {

@@ -20,4 +20,20 @@ export default class PasswordService {
             resetPageUrl
         });
     }
+
+    /**
+     * Resets the user's password.
+     * 
+     * @param {string} password New password.
+     * @param {string} cpassword Confirm new password.
+     * @param {string} token Token.
+     * @return {Promise<AxiosResponse<any>>} Promise with API response.
+     */
+    static resetPassword(password: string, cpassword: string, token: string) {
+        return axios.post(apiLinks.resetPassword, {
+            password,
+            cpassword,
+            token,
+        });
+    }
 }
