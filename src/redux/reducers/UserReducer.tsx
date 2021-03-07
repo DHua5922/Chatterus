@@ -4,6 +4,7 @@ export const initialUserState = {
     user: null,
     chats: null,
     chosenChat: null,
+    chosenChatId: "" as string,
 };
 
 export default function UserReducer(state = initialUserState, action) {
@@ -21,6 +22,12 @@ export default function UserReducer(state = initialUserState, action) {
         updatedState = {
             chosenChat: payload,
             ...rest,
+        };
+    } else if(type === redux.CHOOSE_CHAT) {
+        const { chosenChatId, ...rest } = updatedState;
+        updatedState = {
+            chosenChatId: payload,
+            ...rest
         };
     } else if(type === redux.SET_USER) {
         const { user, ...rest } = updatedState;

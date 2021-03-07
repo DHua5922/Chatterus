@@ -2,7 +2,12 @@ module.exports = {
   purge: [],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      inset: {
+        "50px": "50px",
+        "60px": "60px"
+      }
+    },
   },
   variants: {
     extend: {},

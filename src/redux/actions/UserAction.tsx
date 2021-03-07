@@ -13,19 +13,26 @@ const userActions = {
             payload: chosenChat,
         };
     },
+    chooseChat: (chatId: string) => {
+        return {
+            type: redux.CHOOSE_CHAT,
+            payload: chatId,
+        };
+    },
     setChats: (chats) => {
         return {
             type: redux.SET_CHATS,
             payload: chats,
         };
     },
-    setAll: (user, chats, chosenChat) => {
+    setAll: (user, chats, chosenChat, chosenChatId: string) => {
         return {
             type: redux.SET_ALL,
             payload: {
                 user: user,
                 chats: chats,
                 chosenChat: chosenChat,
+                chosenChatId: chosenChatId,
             },
         };
     },

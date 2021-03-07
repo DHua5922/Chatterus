@@ -21,9 +21,9 @@ const ListContainer = tw.div`
     border-l
 `;
 
-function ChatPreview({ title, latestMsg, styles }) {
+function ChatPreview({ title, latestMsg, styles, onClick }) {
     return (
-        <Chat {...styles.container}>
+        <Chat {...styles.container} onClick={onClick}>
             <h1 {...styles.title}>{title}</h1>
             <RecentMessage {...styles.message}>
                 {latestMsg}
@@ -42,12 +42,7 @@ export default function ChatList({ chats }) {
                         title: {},
                         message: {},
                     };
-                    return (
-                        <ChatPreview 
-                            key={chat._id} 
-                            {...chat} 
-                        />
-                    );
+                    return <ChatPreview {...chat} />;
                 }) 
             }
         </ListContainer>
