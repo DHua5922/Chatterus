@@ -1,3 +1,4 @@
+import { useState } from "react";
 import tw from "tailwind-styled-components";
 
 const RecentMessage = tw.small`
@@ -21,6 +22,13 @@ const ListContainer = tw.div`
     border-l
 `;
 
+const FilterInput = tw.input`
+    mx-auto
+    py-2 px-4
+    outline-none
+    border
+`;
+
 function ChatPreview({ title, latestMsg, styles, onClick }) {
     return (
         <Chat {...styles.container} onClick={onClick}>
@@ -33,8 +41,20 @@ function ChatPreview({ title, latestMsg, styles, onClick }) {
 }
 
 export default function ChatList({ chats }) {
+    const [input, setInput] = useState("" as string);
+
+    const inputProps = {
+        placeholder: "Search conversations",
+        value: input,
+        onChange: (evt) => setInput(evt.target.value)
+    };
+
     return (
         <ListContainer>
+            <div className="flex border-b py-4">
+                <FilterInput {...inputProps} />
+            </div>
+            
             { 
                 chats.map(chat => {
                     chat.styles = {
@@ -42,7 +62,13 @@ export default function ChatList({ chats }) {
                         title: {},
                         message: {},
                     };
-                    return <ChatPreview {...chat} />;
+                    const chatTitleToCheck = chat.title.trim().toLowerCase();
+                    const desiredChatTitle = input.trim().toLowerCase();
+                    return (
+                        chatTitleToCheck.includes(desiredChatTitle) 
+                            ? <ChatPreview {...chat} /> 
+                            : <div />
+                    );
                 }) 
             }
         </ListContainer>

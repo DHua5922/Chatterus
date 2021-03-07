@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-nt48bu_Show-chat-when-chosen
+      - CU-p95g3b_Filter-conversations
 
 jobs:
   build:
