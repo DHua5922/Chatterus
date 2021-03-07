@@ -3,7 +3,7 @@ name: Deploy To Heroku (stage)
 on:
   push:
     branches:
-      - CU-nt48gg_Create-password-reset-API
+      - CU-nt48ay_Get-chat-API
 
 jobs:
   build:

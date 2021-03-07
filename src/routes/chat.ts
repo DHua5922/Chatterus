@@ -11,4 +11,9 @@ router.get("/getchats", auth, async (req, res) => {
     res.status(200).json(await ChatService.getUserChats(userId));
 });
 
+router.get("/:id", auth, async (req, res) => {
+    const chatId = req.params.id;
+    res.status(200).json(await ChatService.getChat(chatId));
+});
+
 export default module.exports = router;
