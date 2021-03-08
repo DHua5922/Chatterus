@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-p95g3b_Filter-conversations
+      - CU-p96uu0_Create-new-chat-prompt
 
 jobs:
   build:

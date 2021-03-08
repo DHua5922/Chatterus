@@ -16,12 +16,6 @@ const Chat = tw.div`
     overflow-hidden
 `;
 
-const ListContainer = tw.div`
-    w-1/6
-    border-r
-    border-l
-`;
-
 const FilterInput = tw.input`
     mx-auto
     py-2 px-4
@@ -50,7 +44,7 @@ export default function ChatList({ chats }) {
     };
 
     return (
-        <ListContainer>
+        <>
             <div className="flex border-b py-4">
                 <FilterInput {...inputProps} />
             </div>
@@ -71,6 +65,6 @@ export default function ChatList({ chats }) {
                     );
                 }) 
             }
-        </ListContainer>
+        </>
     );
 }

@@ -36,15 +36,12 @@ const LogoutButton = tw.button`
     rounded-md
 `;
 
-let topItems = [];
-let bottomItems = [];
-
-export default function Sidenav({ topList=topItems, bottomList=bottomItems }) {
+export default function Sidenav() {
     const [showLogoutPrompt, setShowLogoutPrompt] = useState<boolean>(false);
     const [loadState, dispatchLoadState] = useReducer(LoadReducer, initialLoadState)
     const router = useRouter();
 
-    topItems = [
+    const topItems = [
         {
             icon: <ChatIcon />,
             props: {
@@ -61,7 +58,7 @@ export default function Sidenav({ topList=topItems, bottomList=bottomItems }) {
         }
     ];
 
-    bottomItems = [
+    const bottomItems = [
         {
             icon: <LogOutIcon />,
             props: {
@@ -117,7 +114,7 @@ export default function Sidenav({ topList=topItems, bottomList=bottomItems }) {
         <Container>
             <div>
                 {
-                    topList.map(navItem => {
+                    topItems.map(navItem => {
                         const { icon, props } = navItem;
                         return <div {...props}>{icon}</div>
                     })
@@ -125,7 +122,7 @@ export default function Sidenav({ topList=topItems, bottomList=bottomItems }) {
             </div>
             <BottomList>
                 {
-                    bottomList.map(navItem => {
+                    bottomItems.map(navItem => {
                         const { icon, props } = navItem;
                         return <div {...props}>{icon}</div>
                     })

@@ -1,10 +1,11 @@
 import axios from "axios";
+import { apiLinks } from "../../constants";
 
 /**
  * This service manages chat operations.
  */
 export default class ChatService {
-    private static readonly API_BASE: string = "chat/";
+    static readonly API_BASE: string = "chat/";
 
     static getChats() {
         return axios.get(`${this.API_BASE}getchats`);
@@ -18,5 +19,12 @@ export default class ChatService {
      */
     static getChat(id: string) {
         return axios.get(this.API_BASE + id);
+    }
+    
+    static createChat(adminId: string, title: string) {
+        return axios.post(apiLinks.createChat, {
+            adminId,
+            title
+        });
     }
 }

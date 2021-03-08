@@ -1,4 +1,5 @@
 import AuthService from "./api/services/AuthService";
+import ChatService from "./api/services/ChatService";
 import PasswordService from "./api/services/PasswordService";
 import UserService from "./api/services/UserService";
 
@@ -20,6 +21,7 @@ export const apiLinks = {
     profile: `${UserService.API_BASE}profile`,
     sendResetLink: `${PasswordService.API_BASE}email`,
     resetPassword: `${PasswordService.API_BASE}reset`,
+    createChat: `${ChatService.API_BASE}newchat`
 };
 
 export const redux = {
@@ -36,4 +38,6 @@ export const redux = {
     CHOOSE_CHAT: "CHOOSE_CHAT",
     SET_CHATS: "SET_CHATS",
     SET_ALL: "SET_ALL",
+    SHOW_PROMPT: "SHOW_PROMPT",
+    CLOSE_PROMPT: "CLOSE_PROMPT"
 };

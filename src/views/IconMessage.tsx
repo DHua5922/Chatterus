@@ -4,6 +4,7 @@ const Message = tw.div`
     items-center
     flex
     ${props => props.textColor || "text-black"}
+    ${props => props.textSize || "text-base"}
 `;
 
 export default function IconMessage({ classes={}, icon=null, message="" }) {
