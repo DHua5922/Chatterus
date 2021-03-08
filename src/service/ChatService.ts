@@ -3,6 +3,7 @@ import Message from "../model/Message";
 import constants from "../global";
 import PastUser from "../model/PastUser";
 import User from "../model/User";
+import UserService from "./UserService";
 
 export default class ChatService {
     /**
@@ -61,5 +62,22 @@ export default class ChatService {
                     select: constants.mongo.includedUserFields,
                 }
             ]);
+    }
+
+    /**
+     * Creates a new chat.
+     * 
+     * @param {string} admin Chat admin id. 
+     * @param {string} title Chat name.
+     * @returns {Document<any>}
+     */
+    static async createChat(admin: string, title: string) {
+        const newChat = new Chat({
+            admin,
+            title
+        });
+        await newChat.save();
+        await UserService.createChat(admin, newChat._id);
+        return newChat;
     }
 }

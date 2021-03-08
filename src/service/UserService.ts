@@ -104,4 +104,17 @@ export default class UserService {
     static async updatePassword(_id: string, password: string) {
         return User.updateOne({_id}, {password});
     }
+
+    /**
+     * Adds the new chat id to the user's chat list.
+     * 
+     * @param {string} userId User id.
+     * @param {string} newChatId New chat id.
+     * @returns {Promise<Document<any>>}
+     */
+    static async createChat(userId: string, newChatId: string) {
+        const user: any = await PastUser.findById(userId);
+        user.chats.push(newChatId);
+        return user.save();
+    }
 }

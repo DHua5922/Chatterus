@@ -63,4 +63,14 @@ export default class ValidationService {
     ): Promise<boolean> {
         return bcrypt.compare(password, encryptedPassword);
     }
+
+    /**
+     * Checks if the chat name is valid.
+     * 
+     * @param {string} name Chat name.
+     * @returns {boolean} True if valid chat name, or false.
+     */
+    static isValidChatName(name: string): boolean {
+        return name.length > 0;
+    }
 };
