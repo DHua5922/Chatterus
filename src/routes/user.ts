@@ -136,4 +136,8 @@ router.delete("/", auth, async (req, res) => {
     res.status(200).json({ message: "Your account has been deleted." });
 });
 
+router.get("/all", auth, async (req, res) => {
+    res.status(200).json(await UserService.getAllActiveUsers());
+});
+
 export default module.exports = router;

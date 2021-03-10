@@ -117,4 +117,13 @@ export default class UserService {
         user.chats.push(newChatId);
         return user.save();
     }
+
+    /**
+     * Gets all the users who have not been deleted.
+     * 
+     * @returns {Promise<Document<any>>} All the users who have not been deleted.
+     */
+    static async getAllActiveUsers() {
+        return User.find({}).select("username _id");
+    }
 }

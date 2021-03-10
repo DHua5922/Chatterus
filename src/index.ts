@@ -8,6 +8,10 @@ import bodyParser from "body-parser";
 import chat from "./routes/chat";
 import cookieParser from "cookie-parser";
 import password from "./routes/password";
+import { Socket } from "socket.io";
+import PastUser from "./model/PastUser";
+import ChatService from "./service/ChatService";
+import socketAuth from "./middleware/socket";
 
 dotenv.config();
 
@@ -20,7 +24,7 @@ InitiateMongoServer();
 app.use(cookieParser());
 
 // Allow chatterus website to use the API
-const corsConfig = cors({
+const corsOptions = {
     origin: [
         "http://localhost:3000", 
         "https://chatterus-stage.herokuapp.com", 
@@ -29,7 +33,8 @@ const corsConfig = cors({
     credentials: true,
     methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"], 
-});
+};
+const corsConfig = cors(corsOptions);
 app.options("/.*", corsConfig);
 app.use(corsConfig);
 
@@ -49,6 +54,45 @@ app.use("/password", password);
 
 // Start the Express server
 const PORT = process.env.PORT || 4000; // default port to listen
-app.listen(PORT, () => {
+export const server = app.listen(PORT, () => {
     console.log(`Running at http://localhost:${PORT}`);
+});
+
+// enable real time communication
+export const socket = require('socket.io');
+export const io = socket(server, { cors: corsOptions });
+io.use(socketAuth);
+io.on('connection', (socket: Socket) => {
+    /**
+     * Invites users to the conversation.
+     * @param {string} inviterId id of user inviting other users
+     * @param {string[]} invitedIdList ids of users being invited
+     * @param {Conversation} conversation conversation to invite users to
+     */
+     socket.on("INVITE_USERS", async (data) => {
+        const { inviterId, invitedUsernameList, chatId } = data;
+        
+        PastUser.updateMany(
+            { username: { $in: invitedUsernameList } },
+            { $addToSet: { chats: chatId } },
+            null,
+            async (error: any, _: any) => {
+                const errorResult = {
+                    inviterId: inviterId,
+                    message: "Cannot invite users"
+                };
+
+                if(error) {
+                    io.emit("INVITE_USERS_ERROR", errorResult);
+                }
+                else {
+                    io.emit("INVITE_USERS_SUCCESS", inviterId);
+                    io.emit("ON_JOIN_CHAT", {
+                        invitedUsernameList: invitedUsernameList,
+                        chat: await ChatService.getChat(chatId)
+                    });
+                }
+            }
+        );
+    })
 });
