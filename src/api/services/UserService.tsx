@@ -44,4 +44,13 @@ export default class UserService {
     static deleteUser() {
         return axios.delete(this.API_BASE);
     }
+
+    /**
+     * Gets all users.
+     * 
+     * @return {Promise<AxiosResponse<any>>} Promise with API response.
+     */
+    static getAllUsers() {
+        return axios.get(apiLinks.getAllUsers);
+    }
 }

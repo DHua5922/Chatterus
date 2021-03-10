@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ChatService from "../src/api/services/ChatService";
 import userActions from "../src/redux/actions/UserAction";
 import ChatList from "../src/views/ChatList";
@@ -12,6 +12,9 @@ import promptActions from "../src/redux/actions/PromptAction";
 import Prompt from "../src/views/Prompt";
 import loadActions from "../src/redux/actions/LoadAction";
 import Loading from "../src/views/Loading";
+import { prompt } from "../src/constants";
+import { Socket } from "socket.io-client";
+import { SocketContext } from "../src/context/socket";
 
 const AddCircleIcon = tw(AddCircle)`
     h-16
@@ -122,14 +125,7 @@ function useChats() {
      * @param {AxiosResponse<any>} success Success response.
      */
     function onGetChats(success) {
-        let { chats, _id, ...rest } = success.data;
-        chats = chats.map(chat => {
-            return {
-                ...chat,
-                latestMsg: getLatestMessage(chat.messages, _id),
-                onClick: () => dispatch(userActions.chooseChat(chat._id))
-            };
-        });
+        const { chats, _id, ...rest } = success.data;
         dispatch(userActions.setAll({_id, ...rest}, chats, null, ""));
     }
 
@@ -158,7 +154,7 @@ function useChats() {
  */
 function useModal(userId : string, chats: any[]) {
     const dispatch = useDispatch();
-    const { open } = useSelector((state: RootState) => state.promptReducer);
+    const { open, promptToOpen } = useSelector((state: RootState) => state.promptReducer);
     const { success, error, isPending } = useSelector((state: RootState) => state.loadReducer);
     const [chatName, setChatName] = useState("");
     const { onCreateChat, onCreateChatError, onCreatingChat } = useCreateChatResponses(userId);
@@ -175,7 +171,7 @@ function useModal(userId : string, chats: any[]) {
     }
 
     const props = {
-        open: open,
+        open: open && promptToOpen === prompt.CREATE_CHAT,
         onClose: () => dispatch(promptActions.close())
     };
     const header = {
@@ -224,12 +220,32 @@ export default function DashboardPage() {
         // Loading user information and chats
         componentToRender = <div className="m-auto"><Loading /></div>;
     } else {
+        // Loaded user information and chats
+        
+        const socket: Socket = useContext(SocketContext);
+        socket.on("ON_JOIN_CHAT", (data) => {
+            // After being added to chat, update chat preview list
+            const { invitedUsernameList, chat } = data;
+            const isInvited = invitedUsernameList.some(username => user.username === username);
+            const isAlreadyInChatList = chats.some(existingChat => existingChat._id === chat._id);
+            if(isInvited && !isAlreadyInChatList) {
+                dispatch(userActions.setChats([...chats, chat]))
+            }
+        });
+
         // Display user information and chats
+        const chatPreviewList = chats.map(chat => {
+            return {
+                ...chat,
+                latestMsg: getLatestMessage(chat.messages, user._id),
+                onClick: () => dispatch(userActions.chooseChat(chat._id))
+            };
+        });
         componentToRender = (
             <>
                 <ListContainer>
-                    <ChatList chats={chats} />
-                    <AddCircleIcon onClick={() => dispatch(promptActions.show())} />
+                    <ChatList chats={chatPreviewList} />
+                    <AddCircleIcon onClick={() => dispatch(promptActions.show(prompt.CREATE_CHAT))} />
                 </ListContainer>
                 <ChosenChat chatId={chosenChatId} />
                 <Prompt 

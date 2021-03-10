@@ -21,7 +21,8 @@ export const apiLinks = {
     profile: `${UserService.API_BASE}profile`,
     sendResetLink: `${PasswordService.API_BASE}email`,
     resetPassword: `${PasswordService.API_BASE}reset`,
-    createChat: `${ChatService.API_BASE}newchat`
+    createChat: `${ChatService.API_BASE}newchat`,
+    getAllUsers: `${UserService.API_BASE}all`
 };
 
 export const redux = {
@@ -41,3 +42,8 @@ export const redux = {
     SHOW_PROMPT: "SHOW_PROMPT",
     CLOSE_PROMPT: "CLOSE_PROMPT"
 };
+
+export const prompt = {
+    CREATE_CHAT: "CREATE_CHAT",
+    ADD_USERS: "ADD_USERS"
+}

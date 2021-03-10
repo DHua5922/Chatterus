@@ -1,10 +1,11 @@
 import tw from "tailwind-styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { RootState } from "../redux/reducers/allReducer";
 import ChatService from "../api/services/ChatService";
 import userActions from "../redux/actions/UserAction";
 import { format } from "date-fns";
+import ChatHeader from "./ChatHeader";
 
 const PromptContainer = tw.div`
     w-full 
@@ -20,12 +21,7 @@ const ChatContainer = tw.div`
     relative 
     border-r
 `;
-const Header = tw.div`
-    w-full
-    bg-white
-    py-3 px-8
-    text-xl
-`;
+
 const Chat = tw.div`
     overflow-y-auto
     absolute
@@ -94,11 +90,11 @@ export default function ChosenChat({ chatId }) {
             </PromptContainer>
         );
 
-    const { title, messages } = chosenChat;
+    const { messages } = chosenChat;
     return (
         <ChatContainer>
-            <Header>{title}</Header>
-
+            <ChatHeader chat={chosenChat} />
+            
             <Chat>
                 <div>
                     { 
