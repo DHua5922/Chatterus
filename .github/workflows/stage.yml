@@ -3,7 +3,7 @@ name: Deploy To Heroku (stage)
 on:
   push:
     branches:
-      - CU-ph85f3_Create-invite-users-API
+      - CU-pk7pqf_Create-leave-chat-socket
 
 jobs:
   build:

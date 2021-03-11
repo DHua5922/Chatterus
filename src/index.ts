@@ -95,4 +95,18 @@ io.on('connection', (socket: Socket) => {
             }
         );
     })
+
+    socket.on("LEAVING_CHAT", (data) => {
+        const { chatId, userId } = data;
+        
+        PastUser.findByIdAndUpdate(
+            { _id: userId },
+            { $pull: { chats: chatId } },
+            null,
+            (err, _) => {
+                if(err) socket.emit("LEAVE_CHAT_ERROR", "Cannot leave chat");
+                else socket.emit("LEAVE_CHAT", chatId);
+            }
+        );    
+    });
 });
