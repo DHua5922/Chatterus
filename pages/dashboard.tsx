@@ -214,22 +214,20 @@ export default function DashboardPage() {
         user ? user._id : "", 
         chats ? chats: []
     );
+    const socket: Socket = useContext(SocketContext);
     
     let componentToRender;
     if(!chats) {
         // Loading user information and chats
         componentToRender = <div className="m-auto"><Loading /></div>;
     } else {
-        // Loaded user information and chats
-        
-        const socket: Socket = useContext(SocketContext);
         socket.on("ON_JOIN_CHAT", (data) => {
-            // After being added to chat, update chat preview list
+            // After being added to chat, update chat preview list\
             const { invitedUsernameList, chat } = data;
             const isInvited = invitedUsernameList.some(username => user.username === username);
             const isAlreadyInChatList = chats.some(existingChat => existingChat._id === chat._id);
             if(isInvited && !isAlreadyInChatList) {
-                dispatch(userActions.setChats([...chats, chat]))
+                dispatch(userActions.setChats([...chats, chat]));
             }
         });
 

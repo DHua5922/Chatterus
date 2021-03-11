@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-ph85pa_Create-invite-users-prompt
+      - CU-pk7prr_Create-leave-chat-prompt
 
 jobs:
   build:

@@ -9,6 +9,7 @@ import loadActions from '../redux/actions/LoadAction';
 import { prompt } from '../constants';
 import { Chip, MenuItem, Select } from '@material-ui/core';
 import UserService from '../api/services/UserService';
+import userActions from '../redux/actions/UserAction';
 
 const PromptButton = tw.button`
     bg-blue-500
@@ -79,19 +80,31 @@ export default function useAddUserPrompt(chatId: string) {
     const { success, error, isPending } = useSelector((state: RootState) => state.loadReducer);
     const [usersToInvite, setUsersToInvite] = useState([] as string[]);
     const { onAddingUsers } = useAddUsersResponses();
-    const { user } = useSelector((state: RootState) => state.userReducer);
+    const { user, chats } = useSelector((state: RootState) => state.userReducer);
     const users = getAllUsers(user._id);
     const socket: Socket = useContext(SocketContext);
 
-    socket.on("INVITE_USERS_SUCCESS", (data) => {
-        if(data === user._id)
-            dispatch(loadActions.success("Invitation sent."));
-    });
+    useEffect(() => {
+        socket.on("INVITE_USERS_SUCCESS", (data) => {
+            if(data === user._id)
+                dispatch(loadActions.success("Invitation sent."));
+        });
+    
+        socket.on("INVITE_USERS_ERROR", (error) => {
+            if(error.inviterId === user._id)
+                dispatch(loadActions.fail(error.message));
+        });
 
-    socket.on("INVITE_USERS_ERROR", (error) => {
-        if(error.inviterId === user._id)
-            dispatch(loadActions.fail(error.message));
-    });
+        socket.on("ON_JOIN_CHAT", (data) => {
+            // After being added to chat, update chat preview list
+            const { invitedUsernameList, chat } = data;
+            const isInvited = invitedUsernameList.some(username => user.username === username);
+            const isAlreadyInChatList = chats.some(existingChat => existingChat._id === chat._id);
+            if(isInvited && !isAlreadyInChatList) {
+                dispatch(userActions.setChats(chats.concat([chat])))
+            }
+        });
+    }, []);
 
     const props = {
         open: open && promptToOpen === prompt.ADD_USERS,

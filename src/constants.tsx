@@ -45,5 +45,6 @@ export const redux = {
 
 export const prompt = {
     CREATE_CHAT: "CREATE_CHAT",
-    ADD_USERS: "ADD_USERS"
+    ADD_USERS: "ADD_USERS",
+    LEAVE_CHAT: "LEAVE_CHAT"
 }
