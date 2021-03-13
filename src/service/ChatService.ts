@@ -80,4 +80,15 @@ export default class ChatService {
         await UserService.createChat(admin, newChat._id);
         return newChat;
     }
+
+    /**
+     * Updates the chat.
+     * 
+     * @param {string} chatId Id of chat to update.
+     * @param {string} title New chat title. 
+     * @returns {Promise<any>}
+     */
+    static async updateChat(chatId: string, title: string) {
+        return Chat.updateOne({_id: chatId}, {title});
+    }
 }

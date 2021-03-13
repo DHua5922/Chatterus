@@ -109,4 +109,12 @@ io.on('connection', (socket: Socket) => {
             }
         );    
     });
+
+    socket.on("UPDATE_CHAT", async (data) => {
+        const { chatId, title } = data;
+        await ChatService.updateChat(chatId, title);
+        const updatedChat = await ChatService.getChat(chatId);
+        socket.emit("ADMIN_UPDATE_CHAT", updatedChat);
+        socket.broadcast.emit("NON_ADMIN_UPDATE_CHAT", updatedChat);
+    });
 });
