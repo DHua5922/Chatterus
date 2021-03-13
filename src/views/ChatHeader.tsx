@@ -9,6 +9,8 @@ import useAddUserPrompt from '../custom-hooks/useAddUserPrompt';
 import { Exit } from "@styled-icons/icomoon/Exit";
 import useLeaveChatPrompt from '../custom-hooks/useLeaveChatPrompt';
 import { RootState } from '../redux/reducers/allReducer';
+import useUpdateChatPrompt from '../custom-hooks/useUpdateChatPrompt';
+import { Edit } from "@styled-icons/entypo/Edit";
 
 const Header = tw.div`
     bg-white
@@ -29,18 +31,24 @@ const LeaveChatIcon = tw(Exit)`
     cursor-pointer
     ml-4
 `;
+const EditIcon = tw(Edit)`
+    w-6 h-6
+    cursor-pointer
+    ml-4
+`;
 
 /**
  * Custom hook for choosing which prompt to use.
  * 
- * @param {string} chatId Chat id. 
+ * @param {any} chat Chosen chat. 
  * @returns {any} Prompt props.
  */
-function usePrompt(chatId: string) {
+function usePrompt(chat: any) {
     const { promptToOpen } = useSelector((state: RootState) => state.promptReducer);
     const prompts = {
-        addUser: useAddUserPrompt(chatId),
-        leaveChat: useLeaveChatPrompt(chatId)
+        addUser: useAddUserPrompt(chat._id),
+        leaveChat: useLeaveChatPrompt(chat._id),
+        updateChat: useUpdateChatPrompt(chat)
     };
     let modal = prompts.addUser;
 
@@ -48,6 +56,8 @@ function usePrompt(chatId: string) {
         modal = prompts.addUser;
     } else if(promptToOpen === prompt.LEAVE_CHAT) {
         modal = prompts.leaveChat;
+    } else if(promptToOpen === prompt.UPDATE_CHAT) {
+        modal = prompts.updateChat;
     }
 
     return modal;
@@ -55,7 +65,7 @@ function usePrompt(chatId: string) {
 
 export default function ChatHeader({ chat }) {
     const dispatch = useDispatch();
-    const modal = usePrompt(chat._id);
+    const modal = usePrompt(chat);
     const { user } = useSelector((state: RootState) => state.userReducer);
 
     return (
@@ -66,6 +76,10 @@ export default function ChatHeader({ chat }) {
                 {
                     chat.admin._id !== user._id &&
                         <LeaveChatIcon onClick={() => dispatch(promptActions.show(prompt.LEAVE_CHAT))} />
+                }
+                {
+                    chat.admin._id === user._id &&
+                        <EditIcon onClick={() => dispatch(promptActions.show(prompt.UPDATE_CHAT))} />
                 }
             </div>
             <Prompt modal={modal} />

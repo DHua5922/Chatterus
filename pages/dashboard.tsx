@@ -231,6 +231,26 @@ export default function DashboardPage() {
             }
         });
 
+        socket.on("NON_ADMIN_UPDATE_CHAT", (updatedChat) => {
+            // If the non-admin user is viewing the same 
+            // updated chat as admin, update the chat view
+            if(chosenChatId === updatedChat._id) {
+                dispatch(userActions.setChosenChat(updatedChat));
+            }
+            // Update the chat list with the updated chat
+            chats.some((existingChat, index: number) => {
+                if(existingChat._id === updatedChat._id){
+                    dispatch(userActions.setChats([
+                        ...chats.slice(0, index),
+                        updatedChat,
+                        ...chats.slice(index + 1)
+                    ]));
+                    return true;
+                }
+                return false;
+            });
+        });
+
         // Display user information and chats
         const chatPreviewList = chats.map(chat => {
             return {

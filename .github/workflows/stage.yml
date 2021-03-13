@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-pk7prr_Create-leave-chat-prompt
+      - CU-pt0tgx_Create-update-chat-prompt
 
 jobs:
   build:
