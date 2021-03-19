@@ -91,4 +91,15 @@ export default class ChatService {
     static async updateChat(chatId: string, title: string) {
         return Chat.updateOne({_id: chatId}, {title});
     }
+
+    /**
+     * Deletes the chat.
+     * 
+     * @param {string} _id Id of chat to delete.
+     * @returns {Promise<any>}
+     */
+     static async deleteChat(_id: string) {
+        PastUser.updateMany({ chats: _id }, { $pull: { chats: _id } });
+        return Chat.deleteOne({_id});
+    }
 }

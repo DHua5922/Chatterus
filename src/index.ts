@@ -117,4 +117,14 @@ io.on('connection', (socket: Socket) => {
         socket.emit("ADMIN_UPDATE_CHAT", updatedChat);
         socket.broadcast.emit("NON_ADMIN_UPDATE_CHAT", updatedChat);
     });
+
+    socket.on("DELETING_CHAT", async (chatId: string) => {
+        const result = await ChatService.deleteChat(chatId);
+        if(result.deletedCount > 0) {
+            socket.emit("ON_DELETE_CHAT_ADMIN", chatId);
+            socket.broadcast.emit("ON_DELETE_CHAT_NON_ADMIN", chatId);
+        } else {
+            socket.emit("DELETE_CHAT_ERROR", { message: "Cannot delete chat." });
+        }
+    });
 });
