@@ -275,6 +275,18 @@ export default function DashboardPage() {
             ));
         });
 
+        socket.on("SEND_MESSAGE_SUCCESS", (updatedChat) => {
+            if(chosenChatId === updatedChat._id) {
+                // If user is seeing chat where a new 
+                // message was sent, display that message
+                dispatch(userActions.setChosenChat(updatedChat))
+            }
+            dispatch(userActions.setChats(
+                // Update chat list to display new message as latest message
+                chats.map(chat => (updatedChat._id === chat._id) ? updatedChat : chat),
+            ));
+        });
+
         // Display user information and chats
         const chatPreviewList = chats.map(chat => {
             return {

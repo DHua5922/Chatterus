@@ -1,11 +1,13 @@
 import tw from "tailwind-styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { RootState } from "../redux/reducers/allReducer";
 import ChatService from "../api/services/ChatService";
 import userActions from "../redux/actions/UserAction";
 import { format } from "date-fns";
 import ChatHeader from "./ChatHeader";
+import { Socket } from "socket.io-client";
+import { SocketContext } from "../context/socket";
 
 const PromptContainer = tw.div`
     w-full 
@@ -67,6 +69,26 @@ function MessageDisplay({ userId, message, createdAt, loggedInUserId }) {
     );
 }
 
+function SendMessageInput({ userId, chatId }) {
+    const socket: Socket = useContext(SocketContext);
+    const [message, setMessage] = useState("" as string);
+
+    function onSubmit(evt) {
+        evt.preventDefault();
+        socket.emit("SENDING_MESSAGE", { userId, chatId, message: message });
+    }
+
+    return (
+        <form onSubmit={onSubmit}>
+            <MessageInput 
+                placeholder="Enter message" 
+                onChange={(evt) => setMessage(evt.target.value)}
+                value={message}
+            />
+        </form>
+    );
+}
+
 export default function ChosenChat({ chatId }) {
     const { chosenChat, user } = useSelector((state: RootState) => state.userReducer);
     const dispatch = useDispatch();
@@ -108,8 +130,9 @@ export default function ChosenChat({ chatId }) {
                 </div>
             </Chat>
 
-            <MessageInput 
-                placeholder="Enter message"  
+            <SendMessageInput 
+                userId={user._id}
+                chatId={chatId} 
             />
         </ChatContainer>
     );

@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-q558fx_Create-delete-chat-prompt
+      - CU-q5718d_Update-chat-with-new-message
 
 jobs:
   build:
