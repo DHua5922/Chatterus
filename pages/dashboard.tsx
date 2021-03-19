@@ -116,7 +116,7 @@ function useCreateChatResponses(userId: string) {
  * @returns {any} User information and chats.
  */
 function useChats() {
-    const { chats, user, chosenChatId } = useSelector((state: RootState) => state.userReducer);
+    const { chats, user, chosenChatId, chosenChat } = useSelector((state: RootState) => state.userReducer);
     const dispatch = useDispatch();
 
     /**
@@ -141,7 +141,7 @@ function useChats() {
                 .catch(error => console.log(error.response));
     }, [chats]);
 
-    return { chats, user, chosenChatId };
+    return { chats, user, chosenChatId, chosenChat };
 }
 
 /**
@@ -209,7 +209,7 @@ function useModal(userId : string, chats: any[]) {
 
 export default function DashboardPage() {
     const dispatch = useDispatch();
-    const { chosenChatId, chats, user } = useChats();
+    const { chosenChatId, chats, user, chosenChat } = useChats();
     const modal = useModal(
         user ? user._id : "", 
         chats ? chats: []
@@ -249,6 +249,30 @@ export default function DashboardPage() {
                 }
                 return false;
             });
+        });
+
+        socket.on("DELETE_CHAT_ERROR", (error) => {
+            dispatch(loadActions.fail(error.message));
+        });
+    
+        socket.on("ON_DELETE_CHAT_ADMIN", (chatId: string) => {
+            dispatch(loadActions.success(""));
+            dispatch(promptActions.close());
+            dispatch(userActions.setAll(
+                user,
+                chats.filter(chat => chat._id !== chatId),
+                null,
+                "",
+            ));
+        });
+
+        socket.on("ON_DELETE_CHAT_NON_ADMIN", (chatId: string) => {
+            dispatch(userActions.setAll(
+                user,
+                chats.filter(chat => chat._id !== chatId),
+                (chosenChat && chosenChatId === chatId) ? null : chosenChat,
+                "",
+            ));
         });
 
         // Display user information and chats

@@ -11,6 +11,8 @@ import useLeaveChatPrompt from '../custom-hooks/useLeaveChatPrompt';
 import { RootState } from '../redux/reducers/allReducer';
 import useUpdateChatPrompt from '../custom-hooks/useUpdateChatPrompt';
 import { Edit } from "@styled-icons/entypo/Edit";
+import { Trash } from "@styled-icons/boxicons-solid/Trash";
+import useDeleteChatPrompt from '../custom-hooks/useDeleteChatPrompt';
 
 const Header = tw.div`
     bg-white
@@ -36,6 +38,11 @@ const EditIcon = tw(Edit)`
     cursor-pointer
     ml-4
 `;
+const TrashIcon = tw(Trash)`
+    w-6 h-6
+    cursor-pointer
+    ml-4
+`
 
 /**
  * Custom hook for choosing which prompt to use.
@@ -48,7 +55,8 @@ function usePrompt(chat: any) {
     const prompts = {
         addUser: useAddUserPrompt(chat._id),
         leaveChat: useLeaveChatPrompt(chat._id),
-        updateChat: useUpdateChatPrompt(chat)
+        updateChat: useUpdateChatPrompt(chat),
+        deleteChat: useDeleteChatPrompt(chat)
     };
     let modal = prompts.addUser;
 
@@ -58,6 +66,8 @@ function usePrompt(chat: any) {
         modal = prompts.leaveChat;
     } else if(promptToOpen === prompt.UPDATE_CHAT) {
         modal = prompts.updateChat;
+    } else if(promptToOpen === prompt.DELETE_CHAT) {
+        modal = prompts.deleteChat;
     }
 
     return modal;
@@ -79,7 +89,10 @@ export default function ChatHeader({ chat }) {
                 }
                 {
                     chat.admin._id === user._id &&
-                        <EditIcon onClick={() => dispatch(promptActions.show(prompt.UPDATE_CHAT))} />
+                        <>
+                            <EditIcon onClick={() => dispatch(promptActions.show(prompt.UPDATE_CHAT))} />
+                            <TrashIcon onClick={() => dispatch(promptActions.show(prompt.DELETE_CHAT))} />
+                        </>
                 }
             </div>
             <Prompt modal={modal} />
