@@ -3,7 +3,7 @@ name: Deploy To Heroku (stage)
 on:
   push:
     branches:
-      - CU-q558eq_Create-delete-chat-socket
+      - CU-q5715q_Create-send-message-socket
 
 jobs:
   build:

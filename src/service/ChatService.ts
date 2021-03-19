@@ -4,6 +4,7 @@ import constants from "../global";
 import PastUser from "../model/PastUser";
 import User from "../model/User";
 import UserService from "./UserService";
+import MessageService from "./MessageService";
 
 export default class ChatService {
     /**
@@ -101,5 +102,21 @@ export default class ChatService {
      static async deleteChat(_id: string) {
         PastUser.updateMany({ chats: _id }, { $pull: { chats: _id } });
         return Chat.deleteOne({_id});
+    }
+
+    /**
+     * Sends a new message in the chat.
+     * 
+     * @param {string} chatId Id of chat where new message was sent.
+     * @param {string} userId Id of user who sent message.
+     * @param {string} message Message.
+     * @returns {Promise<any>}
+     */
+    static async sendMessage(chatId: string, userId: string, message: string) {
+        const newMessage = await MessageService.createMessage(userId, message);
+        return Chat.findByIdAndUpdate(
+            { _id: chatId }, 
+            { $addToSet: { messages: newMessage._id } }
+        );
     }
 }

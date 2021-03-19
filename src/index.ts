@@ -127,4 +127,11 @@ io.on('connection', (socket: Socket) => {
             socket.emit("DELETE_CHAT_ERROR", { message: "Cannot delete chat." });
         }
     });
+
+    socket.on("SENDING_MESSAGE", async (data) => {
+        const { userId, chatId, message } = data;
+        await ChatService.sendMessage(chatId, userId, message);
+        const updatedChat = await ChatService.getChat(chatId);
+        io.emit("SEND_MESSAGE_SUCCESS", updatedChat);
+    });
 });
