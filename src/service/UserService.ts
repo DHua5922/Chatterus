@@ -50,12 +50,16 @@ export default class UserService {
      */
     static async createUser(username: string, email: string, password: string) {
         const salt = await bcrypt.genSalt(10);
-        const user = new User({
+        const newUserInfo = {
             username: username,
             email: email,
             password: await bcrypt.hash(password, salt),
-        });
+        };
+        const user = new User(newUserInfo);
+        const pastUser = new PastUser(newUserInfo);
+        pastUser._id = user._id;
         await user.save();
+        await pastUser.save();
         return user;
     } 
 

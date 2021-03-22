@@ -3,7 +3,7 @@ name: Deploy To Heroku (stage)
 on:
   push:
     branches:
-      - CU-q5715q_Create-send-message-socket
+      - CU-q56y1n_Fix-user-dashboard-loading
 
 jobs:
   build:
