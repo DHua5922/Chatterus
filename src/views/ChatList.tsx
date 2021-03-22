@@ -16,13 +16,6 @@ const Chat = tw.div`
     overflow-hidden
 `;
 
-const FilterInput = tw.input`
-    mx-auto
-    py-2 px-4
-    outline-none
-    border
-`;
-
 function ChatPreview({ title, latestMsg, styles, onClick }) {
     return (
         <Chat {...styles.container} onClick={onClick}>
@@ -35,36 +28,9 @@ function ChatPreview({ title, latestMsg, styles, onClick }) {
 }
 
 export default function ChatList({ chats }) {
-    const [input, setInput] = useState("" as string);
-
-    const inputProps = {
-        placeholder: "Search conversations",
-        value: input,
-        onChange: (evt) => setInput(evt.target.value)
-    };
-
     return (
         <>
-            <div className="flex border-b py-4">
-                <FilterInput {...inputProps} />
-            </div>
-            
-            { 
-                chats.map(chat => {
-                    chat.styles = {
-                        container: {},
-                        title: {},
-                        message: {},
-                    };
-                    const chatTitleToCheck = chat.title.trim().toLowerCase();
-                    const desiredChatTitle = input.trim().toLowerCase();
-                    return (
-                        chatTitleToCheck.includes(desiredChatTitle) 
-                            ? <ChatPreview {...chat} /> 
-                            : <div />
-                    );
-                }) 
-            }
+            { chats.map(chat => <ChatPreview {...chat} />) }
         </>
     );
 }

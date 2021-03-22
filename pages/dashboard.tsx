@@ -39,6 +39,14 @@ const CreateChatButton = tw.button`
     bg-blue-500
 `;
 
+const FilterInput = tw.input`
+    mx-auto
+    py-2 px-4
+    outline-none
+    border
+    w-full
+`;
+
 /**
  * Gets the most recent message in the chat.
  * 
@@ -207,6 +215,25 @@ function useModal(userId : string, chats: any[]) {
     return { props, header, body, footer, message };
 }
 
+function useFilter() {
+    const [input, setInput] = useState("" as string);
+    const inputProps = {
+        placeholder: "Search conversations",
+        value: input,
+        onChange: (evt) => setInput(evt.target.value)
+    };
+    const elem = (
+        <div className="flex border-b py-4 px-6">
+            <FilterInput {...inputProps} />
+        </div>
+    );
+
+    return { 
+        input,
+        elem
+    };
+}
+
 export default function DashboardPage() {
     const dispatch = useDispatch();
     const { chosenChatId, chats, user, chosenChat } = useChats();
@@ -215,6 +242,7 @@ export default function DashboardPage() {
         chats ? chats: []
     );
     const socket: Socket = useContext(SocketContext);
+    const { input, elem } = useFilter();
     
     let componentToRender;
     if(!chats) {
@@ -288,16 +316,27 @@ export default function DashboardPage() {
         });
 
         // Display user information and chats
-        const chatPreviewList = chats.map(chat => {
+        let chatPreviewList = chats.map(chat => {
             return {
                 ...chat,
                 latestMsg: getLatestMessage(chat.messages, user._id),
-                onClick: () => dispatch(userActions.chooseChat(chat._id))
+                onClick: () => dispatch(userActions.chooseChat(chat._id)),
+                styles: {
+                    container: {},
+                    title: {},
+                    message: {},
+                }
             };
+        });
+        chatPreviewList = chatPreviewList.filter(chat => {
+            const chatTitleToCheck = chat.title.trim().toLowerCase();
+            const desiredChatTitle = input.trim().toLowerCase();
+            return chatTitleToCheck.includes(desiredChatTitle);
         });
         componentToRender = (
             <>
                 <ListContainer>
+                    {elem}
                     <ChatList chats={chatPreviewList} />
                     <AddCircleIcon onClick={() => dispatch(promptActions.show(prompt.CREATE_CHAT))} />
                 </ListContainer>

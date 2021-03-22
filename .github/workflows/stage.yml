@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-q5718d_Update-chat-with-new-message
+      - CU-q91yc6_Refactor-chat-filter
 
 jobs:
   build:
