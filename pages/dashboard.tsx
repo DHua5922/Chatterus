@@ -26,10 +26,12 @@ const AddCircleIcon = tw(AddCircle)`
 `;
 
 const ListContainer = tw.div`
-    w-1/6
+    w-72
     border-r
     border-l
     relative
+    hidden
+    md:block
 `;
 
 const CreateChatButton = tw.button`

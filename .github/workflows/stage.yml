@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-q91yc6_Refactor-chat-filter
+      - CU-q55aya_Make-dashboard-responsive
 
 jobs:
   build:

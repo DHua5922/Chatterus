@@ -8,6 +8,9 @@ module.exports = {
         "60px": "60px"
       }
     },
+    minWidth: {
+      '330px': '330px'
+    }
   },
   variants: {
     extend: {},

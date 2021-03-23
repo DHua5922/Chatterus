@@ -22,6 +22,7 @@ const ChatContainer = tw.div`
     w-4/6 
     relative 
     border-r
+    min-w-330px
 `;
 
 const Chat = tw.div`
