@@ -7,7 +7,9 @@ import userActions from "../redux/actions/UserAction";
 import { format } from "date-fns";
 import ChatHeader from "./ChatHeader";
 import { Socket } from "socket.io-client";
-import { SocketContext } from "../context/socket";
+import { socket, SocketContext } from "../context/socket";
+import loadActions from "../redux/actions/LoadAction";
+import { socketEvents } from "../constants";
 
 const PromptContainer = tw.div`
     w-full 
@@ -93,6 +95,39 @@ function SendMessageInput({ userId, chatId }) {
 export default function ChosenChat({ chatId }) {
     const { chosenChat, user } = useSelector((state: RootState) => state.userReducer);
     const dispatch = useDispatch();
+    const { 
+        DELETE_CHAT_ERROR, 
+        NON_ADMIN_UPDATE_CHAT, 
+        SEND_MESSAGE_SUCCESS 
+    } = socketEvents;
+
+    useEffect(() => {
+        socket.on(DELETE_CHAT_ERROR, (error) => {
+            dispatch(loadActions.fail(error.message));
+        });
+
+        () => socket.close();
+    }, []);
+
+    useEffect(() => {
+        socket.on(NON_ADMIN_UPDATE_CHAT, (updatedChat) => {
+            // If the non-admin user is viewing the same 
+            // updated chat as admin, update the chat view
+            if(chosenChat && chosenChat._id === updatedChat._id) {
+                dispatch(userActions.setChosenChat(updatedChat));
+            }
+        });
+
+        socket.on(SEND_MESSAGE_SUCCESS, (updatedChat) => {
+            if(chosenChat && chosenChat._id === updatedChat._id) {
+                // If user is seeing chat where a new 
+                // message was sent, display that message
+                dispatch(userActions.setChosenChat(updatedChat))
+            }
+        });
+
+        () => socket.close();
+    }, [chosenChat]);
 
     useEffect(() => {
         if(chatId) {

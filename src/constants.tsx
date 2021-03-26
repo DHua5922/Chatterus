@@ -50,3 +50,29 @@ export const prompt = {
     UPDATE_CHAT: "UPDATE_CHAT",
     DELETE_CHAT: "DELETE_CHAT"
 }
+
+export const socketEvents = {
+    NON_ADMIN_UPDATE_CHAT: "NON_ADMIN_UPDATE_CHAT",
+    ON_JOIN_CHAT: "ON_JOIN_CHAT",
+    SEND_MESSAGE_SUCCESS: "SEND_MESSAGE_SUCCESS",
+    ON_DELETE_CHAT_ADMIN: "ON_DELETE_CHAT_ADMIN",
+    ON_DELETE_CHAT_NON_ADMIN: "ON_DELETE_CHAT_NON_ADMIN",
+    DELETE_CHAT_ERROR: "DELETE_CHAT_ERROR",
+};
+
+/**
+ * Gets the most recent message in the chat.
+ * 
+ * @param {any[]} messages Chat messages.
+ * @param {string} userAccountId User id.
+ * @returns {string} Most recent message in the chat.
+ */
+export function getLatestMessage(messages, userAccountId: string): string {
+    let latestMsg = "";
+    const lastMsg = messages[messages.length - 1];
+    if(lastMsg) {
+        const { message, userId } = lastMsg;
+        latestMsg = `${(userId._id === userAccountId) ? "You" : userId.username}: ${message}`;
+    }
+    return latestMsg;
+}

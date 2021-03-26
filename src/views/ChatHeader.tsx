@@ -5,14 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import Prompt from './Prompt';
 import promptActions from '../redux/actions/PromptAction';
 import { prompt } from '../constants';
-import useAddUserPrompt from '../custom-hooks/useAddUserPrompt';
 import { Exit } from "@styled-icons/icomoon/Exit";
-import useLeaveChatPrompt from '../custom-hooks/useLeaveChatPrompt';
 import { RootState } from '../redux/reducers/allReducer';
-import useUpdateChatPrompt from '../custom-hooks/useUpdateChatPrompt';
 import { Edit } from "@styled-icons/entypo/Edit";
 import { Trash } from "@styled-icons/boxicons-solid/Trash";
-import useDeleteChatPrompt from '../custom-hooks/useDeleteChatPrompt';
+import usePrompt from '../custom-hooks/usePrompt';
 
 const Header = tw.div`
     bg-white
@@ -42,36 +39,7 @@ const TrashIcon = tw(Trash)`
     w-6 h-6
     cursor-pointer
     ml-4
-`
-
-/**
- * Custom hook for choosing which prompt to use.
- * 
- * @param {any} chat Chosen chat. 
- * @returns {any} Prompt props.
- */
-function usePrompt(chat: any) {
-    const { promptToOpen } = useSelector((state: RootState) => state.promptReducer);
-    const prompts = {
-        addUser: useAddUserPrompt(chat._id),
-        leaveChat: useLeaveChatPrompt(chat._id),
-        updateChat: useUpdateChatPrompt(chat),
-        deleteChat: useDeleteChatPrompt(chat)
-    };
-    let modal = prompts.addUser;
-
-    if(promptToOpen === prompt.ADD_USERS) {
-        modal = prompts.addUser;
-    } else if(promptToOpen === prompt.LEAVE_CHAT) {
-        modal = prompts.leaveChat;
-    } else if(promptToOpen === prompt.UPDATE_CHAT) {
-        modal = prompts.updateChat;
-    } else if(promptToOpen === prompt.DELETE_CHAT) {
-        modal = prompts.deleteChat;
-    }
-
-    return modal;
-}
+`;
 
 export default function ChatHeader({ chat }) {
     const dispatch = useDispatch();

@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-q55aya_Make-dashboard-responsive
+      - CU-qd30rn_Refactor-dashboard-code
 
 jobs:
   build:
