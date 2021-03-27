@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-qd30rn_Refactor-dashboard-code
+      - CU-qq8nw8_Update-production-app-name
 
 jobs:
   build:
