@@ -4,9 +4,12 @@ Website for users to chat with each other.
 ## Technologies
 * Next.js
 * React
+* Material UI
 * TypeScript
 * HTML5
 * CSS3
+* Tailwind
+* Styled Components
 * ClickUp
 
 ## Task Completion Process

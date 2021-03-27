@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-qq8nw8_Update-production-app-name
+      - CU-qq8vmj_Update-front-end-README
 
 jobs:
   build:
