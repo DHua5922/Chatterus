@@ -28,7 +28,7 @@ const corsOptions = {
     origin: [
         "http://localhost:3000", 
         "https://chatterus-stage.herokuapp.com", 
-        "https://chatterus-production.herokuapp.com"
+        "https://chatterus.herokuapp.com"
     ],
     credentials: true,
     methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],

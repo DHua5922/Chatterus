@@ -5,6 +5,7 @@ Node.js microservice for chatterus application.
 * Node.js
 * Express
 * TypeScript
+* MongoDB
 * Docker
 * ClickUp
 * AWS ECS, EC2, and ECR
