@@ -4,7 +4,7 @@
 FROM node:current-alpine AS base
 WORKDIR /base
 # Copy our package.json and install it. 
-COPY package*.json ./
+COPY package.json ./
 RUN npm install
 # Add the working project files.
 COPY . .

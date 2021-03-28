@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-qq8vmj_Update-front-end-README
+      - CU-qt198m_Add-dockerignore
 
 jobs:
   build:
