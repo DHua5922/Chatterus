@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-qt198m_Add-dockerignore
+      - CU-r53wda_Add-missing-navbar
 
 jobs:
   build:

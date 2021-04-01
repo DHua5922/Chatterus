@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import React, { useReducer } from "react";
 import LoadReducer, { initialLoadState } from "../src/redux/reducers/LoadReducer";
 import SignUpReducer, { initialSignUpState } from "../src/redux/reducers/SignUpReducer";
 import MyForm from "../src/views/MyForm";
@@ -7,6 +7,7 @@ import UserService from "../src/api/services/UserService";
 import loadActions from "../src/redux/actions/LoadAction";
 import { useRouter } from "next/router";
 import { pageLinks } from "../src/constants";
+import Navbar from '../src/views/Navbar';
 
 export default function SignUpPage() {
     const [loadState, dispatchLoadState] = useReducer(LoadReducer, initialLoadState);
@@ -126,14 +127,17 @@ export default function SignUpPage() {
     }
     
     return (
-        <div className="flex h-screen bg-gray-50">
-            <MyForm
-                form={properties.form}
-                header={properties.header}
-                fields={properties.fields}
-                buttons={properties.buttons}
-                message={properties.message}
-            />
-        </div>
+        <>
+            <Navbar />
+            <div className="flex h-screen bg-gray-50">
+                <MyForm
+                    form={properties.form}
+                    header={properties.header}
+                    fields={properties.fields}
+                    buttons={properties.buttons}
+                    message={properties.message}
+                />
+            </div>
+        </>
     );
 }

@@ -8,6 +8,7 @@ import loginActions from "../src/redux/actions/LoginAction";
 import LoadReducer, { initialLoadState } from "../src/redux/reducers/LoadReducer";
 import LoginReducer, { initialLoginState } from "../src/redux/reducers/LoginReducer";
 import MyForm from "../src/views/MyForm";
+import Navbar from '../src/views/Navbar';
 
 const Link = tw.a`
     underline
@@ -105,15 +106,18 @@ export default function loginPage() {
     }
 
     return (
-        <div className="flex h-screen bg-gray-50">
-            <MyForm
-                form={properties.form}
-                header={properties.header}
-                fields={properties.fields}
-                buttons={properties.buttons}
-                message={properties.message}
-                footer={properties.footer}
-            />
-        </div>
+        <>
+            <Navbar />
+            <div className="flex h-screen bg-gray-50">
+                <MyForm
+                    form={properties.form}
+                    header={properties.header}
+                    fields={properties.fields}
+                    buttons={properties.buttons}
+                    message={properties.message}
+                    footer={properties.footer}
+                />
+            </div>
+        </>
     );
 }
