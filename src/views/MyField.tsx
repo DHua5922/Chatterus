@@ -25,6 +25,8 @@ const Field = tw.input`
     w-full
     my-2
     outline-none
+    border-black
+    border
     ${props => props.backgroundColor || "bg-white"}
 `;
 

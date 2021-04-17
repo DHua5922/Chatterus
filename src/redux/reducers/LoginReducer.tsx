@@ -1,27 +1,30 @@
 import { redux } from "../../constants";
+import { Login } from "../../types/redux";
 
-export const initialLoginState = {
+interface Action {
+    type: string
+    payload: string
+}
+
+export const initialLoginState: Login = {
     usernameOrEmail: "",
     password: "",
 };
 
-export default function LoginReducer(state=initialLoginState, action) {
+export default function LoginReducer(state: Login=initialLoginState, action: Action): Login {
     const { type, payload } = action;
 
-    let updatedState = state;
     if(type === redux.UPDATE_USERNAME_OR_EMAIL) {
-        const { usernameOrEmail, ...rest } = updatedState;
-        updatedState = {
-            ...rest,
+        return {
+            ...state,
             usernameOrEmail: payload,
         };
     } else if(type === redux.UPDATE_PASSWORD) {
-        const { password, ...rest } = updatedState;
-        updatedState = {
-            ...rest,
+        return {
+            ...state,
             password: payload,
         };
     }
 
-    return updatedState;
+    return state;
 }

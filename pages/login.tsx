@@ -1,75 +1,113 @@
 import { useRouter } from "next/router";
-import React, { useReducer } from "react";
+import React from "react";
 import tw from "tailwind-styled-components";
 import axios from "axios";
 import { pageLinks } from "../src/constants";
 import loadActions from "../src/redux/actions/LoadAction";
 import loginActions from "../src/redux/actions/LoginAction";
-import LoadReducer, { initialLoadState } from "../src/redux/reducers/LoadReducer";
-import LoginReducer, { initialLoginState } from "../src/redux/reducers/LoginReducer";
-import MyForm from "../src/views/MyForm";
-import Navbar from '../src/views/Navbar';
+import { useDispatch, useSelector } from "react-redux";
+import AuthForm from "../src/views/AuthForm";
+import { RootState } from "../src/redux/reducers/allReducer";
+import AuthPage from "../src/views/AuthPage";
+import { FieldLabel, FormField } from "../src/types/form";
+import { Load, Login } from "../src/types/redux";
 
 const Link = tw.a`
-    underline
     text-blue-500
+    hover:underline
+    focus:underline
 `;
 
-export default function loginPage() {
-    const [loadState, dispatchLoadState] = useReducer(LoadReducer, initialLoadState);
-    const [fieldValues, dispatchFieldValues] = useReducer(LoginReducer, initialLoginState);
+/**
+ * Custom hook for creating properties to use for form fields.
+ * 
+ * @returns {FormField[]} Form field properties.
+ */
+function useFields(): FormField[] {
+    const loadState: Load = useSelector((state: RootState) => state.loadReducer);
+    const fieldValues: Login = useSelector((state: RootState) => state.loginReducer);
+    const dispatch = useDispatch();
 
-    const label = {
+    const label: FieldLabel = {
         props: {},
         children: "",
     };
+    return [
+        {
+            label: label,
+            input: {
+                type: "text",
+                placeholder: "username or email",
+                value: fieldValues.usernameOrEmail,
+                onChange: (evt) => dispatch(loginActions.updateUsernameOrEmail(evt.target.value)),
+            },
+            message: {
+                error: (loadState.error && loadState.error.username_error) ? loadState.error.username_error : [],
+                success: "",
+            },
+        },
+        {
+            label: label,
+            input: {
+                type: "password",
+                placeholder: "password",
+                value: fieldValues.password,
+                onChange: (evt) => dispatch(loginActions.updatePassword(evt.target.value)),
+            },
+            message: {
+                error: (loadState.error && loadState.error.password_error) ? loadState.error.password_error : [],
+                success: "",
+            },
+        },
+    ];
+}
+
+/**
+ * Signs the user in.
+ * 
+ * @return {Function} submit event handler.
+ */
+function useOnSubmit(): Function {
+    const router = useRouter();
+    const dispatch = useDispatch();
+    const fieldValues: Login = useSelector((state: RootState) => state.loginReducer);
+
+    return (evt) => {
+        evt.preventDefault();
+        axios
+            .post("auth/login", fieldValues)
+            .then(() => router.push(pageLinks.dashboard))
+            .catch(error => {
+                if(error.response && error.response.status === 400) {
+                    // Invalid login information
+                    dispatch(loadActions.fail({ errorMsg: error.response.data.message }));
+                } else {
+                    // Server error
+                    dispatch(loadActions.fail({ errorMsg: "There was a problem signing you in." }));
+                }
+            });
+    };
+}
+
+/**
+ * Creates login form element.
+ * 
+ * @returns {JSX.Element} Login form element.
+ */
+function MainContent(): JSX.Element {
+    const loadState: Load = useSelector((state: RootState) => state.loadReducer);
+
     const properties = {
         form: {
-            enableBorder: true,
-            onSubmit: (evt) => {
-                evt.preventDefault();
-                login(fieldValues);
-            }, 
+            onSubmit: useOnSubmit(), 
         },
-        header: {
-            children: "Login",
-            props: {},
-        },
-        fields: [
-            {
-                label: label,
-                input: {
-                    type: "text",
-                    placeholder: "username or email",
-                    value: fieldValues.usernameOrEmail,
-                    onChange: (evt) => dispatchFieldValues(loginActions.updateUsernameOrEmail(evt.target.value)),
-                    backgroundColor: "bg-gray-50",
-                },
-                message: {
-                    error: (loadState.error && loadState.error.username_error) ? loadState.error.username_error : [],
-                    success: "",
-                },
-            },
-            {
-                label: label,
-                input: {
-                    type: "password",
-                    placeholder: "password",
-                    value: fieldValues.password,
-                    onChange: (evt) => dispatchFieldValues(loginActions.updatePassword(evt.target.value)),
-                    backgroundColor: "bg-gray-50",
-                },
-                message: {
-                    error: (loadState.error && loadState.error.password_error) ? loadState.error.password_error : [],
-                    success: "",
-                },
-            },
-        ],
+        header: "Login",
+        fields: useFields(),
         buttons: [
             {
                 props: {},
                 children: "Login",
-                onClick: () => login(fieldValues)
+                onClick: useOnSubmit()
             }
         ],
         message: {
@@ -80,44 +118,22 @@ export default function loginPage() {
                 message: loadState.isPending ? "Signing you in..." : "",
             },
         },
-        footer: <Link href={pageLinks.resetEmail}>Forgot password?</Link>,
+        footer: 
+            <div className="text-center">
+                <div className="py-1" />
+                <Link href={pageLinks.resetEmail}>Forgot password?</Link>
+            </div>,
     }
 
-    const router = useRouter();
-    /**
-     * Signs the user in.
-     * 
-     * @param {any} userLogin Login information.
-     */
-    function login(userLogin) {
-        dispatchLoadState(loadActions.pending());
-        axios
-            .post("auth/login", userLogin)
-            .then(() => router.push(pageLinks.dashboard))
-            .catch(error => {
-                if(error.response && error.response.status === 400) {
-                    // Invalid login information
-                    dispatchLoadState(loadActions.fail({ errorMsg: error.response.data.message }));
-                } else {
-                    // Server error
-                    dispatchLoadState(loadActions.fail({ errorMsg: "There was a problem signing you in." }));
-                }
-            });
-    }
+    return <AuthForm {...properties} />;
+}
 
-    return (
-        <>
-            <Navbar />
-            <div className="flex h-screen bg-gray-50">
-                <MyForm
-                    form={properties.form}
-                    header={properties.header}
-                    fields={properties.fields}
-                    buttons={properties.buttons}
-                    message={properties.message}
-                    footer={properties.footer}
-                />
-            </div>
-        </>
-    );
+/**
+ * Shows login page.
+ * 
+ * @returns {JSX.Element} Login page element.
+ */
+export default function loginPage(): JSX.Element {
+    const LoginPage = AuthPage(MainContent);
+    return <LoginPage title="Login" />
 }

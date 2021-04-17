@@ -1,12 +1,13 @@
 import { redux } from "../../constants";
+import { Load } from "../../types/redux";
 
-export const initialLoadState = {
+export const initialLoadState: Load = {
     isPending: false as boolean,
     success: null as any,
     error: null as any,
 };
 
-export default function LoadReducer(state = initialLoadState, action: { type: any; payload: any; }) {
+export default function LoadReducer(state: Load = initialLoadState, action: { type: any; payload: any; }): Load {
     const { type, payload } = action;
 
     switch(type) {
