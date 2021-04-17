@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-r53wda_Add-missing-navbar
+      - CU-t79cj0_Revamp-homepage
 
 jobs:
   build:
