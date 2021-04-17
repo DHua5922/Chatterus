@@ -1,41 +1,37 @@
 import { redux } from "../../constants";
+import { Registration } from "../../types/redux";
 
-export const initialSignUpState = {
+export const initialSignUpState: Registration = {
     username: "" as string,
     email: "" as string,
     password: "" as string,
     cpassword: "" as string,
 };
 
-export default function SignUpReducer(state = initialSignUpState, action) {
+export default function SignUpReducer(state: Registration = initialSignUpState, action): Registration {
     const { type, payload } = action;
 
-    let updatedState = state;
     if(type === redux.UPDATE_USERNAME) {
-        const { username, ...rest } = updatedState;
-        updatedState = {
+        return {
+            ...state,
             username: payload,
-            ...rest,
         };
     } else if(type === redux.UPDATE_EMAIL) {
-        const { email, ...rest } = updatedState;
-        updatedState = {
+        return {
+            ...state,
             email: payload,
-            ...rest,
         };
     } else if(type === redux.UPDATE_PASSWORD) {
-        const { password, ...rest } = updatedState;
-        updatedState = {
+        return {
+            ...state,
             password: payload,
-            ...rest,
         };
     } else if(type === redux.UPDATE_CPASSWORD) {
-        const { cpassword, ...rest } = updatedState;
-        updatedState = {
+        return {
+            ...state,
             cpassword: payload,
-            ...rest,
         };
     }
 
-    return updatedState;
+    return state;
 }

@@ -63,7 +63,8 @@ function useFields(): FormField[] {
 }
 
 /**
- * Signs the user in.
+ * Creates a handler for signing the user in when the
+ * form has been submitted.
  * 
  * @return {Function} submit event handler.
  */
@@ -74,6 +75,7 @@ function useOnSubmit(): Function {
 
     return (evt) => {
         evt.preventDefault();
+        dispatch(loadActions.pending());
         axios
             .post("auth/login", fieldValues)
             .then(() => router.push(pageLinks.dashboard))

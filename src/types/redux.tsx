@@ -9,7 +9,15 @@ interface Load {
     error: any
 }
 
+interface Registration {
+    username: string
+    email: string
+    password: string
+    cpassword: string
+}
+
 export type {
     Login,
-    Load
+    Load,
+    Registration
 }

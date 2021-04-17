@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-t79d8r_Revamp-login
+      - CU-t79d94_Revamp-registration
 
 jobs:
   build:
