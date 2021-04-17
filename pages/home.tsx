@@ -73,10 +73,10 @@ function MainContent() {
             </Features>
             <div className="bg-blue-200 py-16">
                 <div className="text-center text-2xl">Stay in touch with those important to you</div>
-                <div className="flex justify-center mt-8">
+                <div className="grid justify-center sm:flex">
                     {
                         cards.map(card => (
-                            <div className="mx-4">
+                            <div className="mx-4 mt-8">
                                 <MyCard {...card} />
                             </div>
                         ))

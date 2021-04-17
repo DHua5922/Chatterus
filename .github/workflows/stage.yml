@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-t79dbn_Revamp-reset-password
+      - CU-t7aby5_Revamp-navbar
 
 jobs:
   build:

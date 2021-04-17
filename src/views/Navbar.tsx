@@ -4,7 +4,7 @@ import { pageLinks } from "../constants";
 const NavItem = tw.li`
     border-2
     text-center
-    p-1.5
+    py-2 px-5
     hover:bg-white
     hover:text-black
     cursor-pointer
@@ -12,7 +12,8 @@ const NavItem = tw.li`
 
 const Nav = tw.ul`
     items-center
-    flex
+    grid
+    sm:flex
     justify-center
     p-8	
     bg-gray-700	
@@ -20,7 +21,7 @@ const Nav = tw.ul`
 `;
 
 const Brand = ({ imgSrc="", label="" }) => (
-    <a href="/" className="text-4xl flex">
+    <a href="/" className="justify-center text-4xl flex">
         <img src={imgSrc} />
         {label}
     </a>
@@ -47,8 +48,8 @@ export default function Navbar() {
     return (
         <Nav>
             <Brand label={"Chatterus"} />
-            <div className="px-12" />
-            <div className="flex grid-cols-2 gap-4">
+            <div className="max-w-2xl w-16" />
+            <div className="flex grid-cols-2 gap-4 pt-4 sm:pt-0">
                 {links.map(link => <NavLink {...link} />)}
             </div>
         </Nav>
