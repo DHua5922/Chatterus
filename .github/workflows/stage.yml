@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-t79dbf_Revamp-email-page
+      - CU-t79dbn_Revamp-reset-password
 
 jobs:
   build:

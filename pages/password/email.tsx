@@ -77,7 +77,6 @@ function MainContent(): JSX.Element {
 
     const properties = {
         form: {
-            enableBorder: true,
             onSubmit: useOnSubmit(), 
         },
         header: "Reset Password",

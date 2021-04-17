@@ -119,7 +119,6 @@ function MainContent(): JSX.Element {
     const loadState: Load = useSelector((state: RootState) => state.loadReducer);
     const properties = {
         form: {
-            enableBorder: true,
             onSubmit: useOnSubmit(), 
         },
         header: "Sign Up",
