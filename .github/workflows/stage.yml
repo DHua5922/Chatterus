@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-t79d94_Revamp-registration
+      - CU-t79dbf_Revamp-email-page
 
 jobs:
   build:
