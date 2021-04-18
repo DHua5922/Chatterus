@@ -38,7 +38,8 @@ const MessageInput = tw.input`
     p-4
     w-full
     rounded
-    border
+    border-2
+    border-black
     outline-none
     absolute
     bottom-0

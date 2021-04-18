@@ -2,7 +2,6 @@ import React from "react";
 import userActions from "../src/redux/actions/UserAction";
 import ChatList from "../src/views/ChatList";
 import ChosenChat from "../src/views/ChosenChat";
-import Sidenav from "../src/views/Sidenav";
 import { useDispatch } from "react-redux";
 import { AddCircle } from "@styled-icons/ionicons-sharp/AddCircle";
 import tw from "tailwind-styled-components";
@@ -13,6 +12,8 @@ import { getLatestMessage, prompt } from "../src/constants";
 import useFilter from "../src/custom-hooks/useFilter";
 import useCreateChatPrompt from "../src/custom-hooks/useCreateChatPrompt";
 import useChats from "../src/custom-hooks/useChats";
+import Page from "../src/views/Page";
+import UserPage from "../src/views/UserPage";
 
 const AddCircleIcon = tw(AddCircle)`
     h-16
@@ -26,13 +27,12 @@ const AddCircleIcon = tw(AddCircle)`
 const ListContainer = tw.div`
     w-72
     border-r
-    border-l
     relative
     hidden
     md:block
 `;
 
-export default function DashboardPage() {
+function MainContent() {
     const dispatch = useDispatch();
     const { chosenChatId, chats, user, chosenChat } = useChats();
     const modal = useCreateChatPrompt(
@@ -51,12 +51,7 @@ export default function DashboardPage() {
             return {
                 ...chat,
                 latestMsg: getLatestMessage(chat.messages, user._id),
-                onClick: () => dispatch(userActions.chooseChat(chat._id)),
-                styles: {
-                    container: {},
-                    title: {},
-                    message: {},
-                }
+                onClick: () => dispatch(userActions.chooseChat(chat._id))
             };
         });
         chatPreviewList = chatPreviewList.filter(chat => {
@@ -81,8 +76,12 @@ export default function DashboardPage() {
     
     return (
         <div className="flex w-full h-full bg-gray-50">
-            <Sidenav />
             {componentToRender}
         </div>
     );
+}
+
+export default function DashboardPage() {
+    const Dashboard = Page(UserPage(MainContent));
+    return <Dashboard title="Chatterus" />
 }

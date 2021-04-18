@@ -23,11 +23,11 @@ const Chat = tw.div`
     overflow-hidden
 `;
 
-function ChatPreview({ title, latestMsg, styles, onClick }) {
+function ChatPreview({ title, latestMsg, onClick }) {
     return (
-        <Chat {...styles.container} onClick={onClick}>
-            <h1 {...styles.title}>{title}</h1>
-            <RecentMessage {...styles.message}>
+        <Chat onClick={onClick}>
+            <h1>{title}</h1>
+            <RecentMessage>
                 {latestMsg}
             </RecentMessage>
         </Chat>
