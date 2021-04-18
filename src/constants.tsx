@@ -48,7 +48,8 @@ export const prompt = {
     ADD_USERS: "ADD_USERS",
     LEAVE_CHAT: "LEAVE_CHAT",
     UPDATE_CHAT: "UPDATE_CHAT",
-    DELETE_CHAT: "DELETE_CHAT"
+    DELETE_CHAT: "DELETE_CHAT",
+    DELETE_ACCOUNT: "DELETE_ACCOUNT"
 }
 
 export const socketEvents = {

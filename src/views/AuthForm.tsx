@@ -9,7 +9,7 @@ import SuccessMessage from "./SuccessMessage";
 const Form = tw.form`
     m-auto
     p-8
-    shadow-lg
+    ${props => props.shadow || "shadow-lg"}
     bg-white
 `;
 

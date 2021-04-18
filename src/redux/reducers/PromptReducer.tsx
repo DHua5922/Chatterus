@@ -14,10 +14,9 @@ export default function PromptReducer(state = initialState, action) {
             promptToOpen: payload,
         };
     } else if(type === redux.CLOSE_PROMPT) {
-        const { open, ...rest } = state;
         return {
+            ...state,
             open: false,
-            ...rest
         };
     }
 

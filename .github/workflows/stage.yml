@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-t7aby5_Revamp-navbar
+      - CU-t7anvt_Revamp-profile-page
 
 jobs:
   build:
