@@ -5,8 +5,9 @@ import tw from "tailwind-styled-components";
 
 const Features = tw.div`
     text-center
-    my-12
+    p-12
     block
+    bg-gray-50
     sm:flex
     sm:justify-around
     sm:text-left
@@ -20,7 +21,7 @@ const Container = tw.div`
 
 function Feature({ header, description, imgPath }) {
     return (
-        <div className="my-12 px-8">
+        <div className="p-8">
             <div className="text-2xl text-center">{header}</div>
             <div className="text-lg pt-3">{description}</div>
             <img src={imgPath} className="w-48 pt-4 mx-auto" />

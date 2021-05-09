@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-uz944f_Fix-loading-issues
+      - CU-uz9dtj_Remove-whitespace-in-homepage
 
 jobs:
   build:
