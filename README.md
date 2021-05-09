@@ -1,5 +1,5 @@
 # chatterus-backend
-Node.js microservice for chatterus application.
+Node.js web service for chat application.
 
 ## Technologies Used
 * Node.js
@@ -7,8 +7,10 @@ Node.js microservice for chatterus application.
 * TypeScript
 * MongoDB
 * Docker
-* ClickUp
 * AWS ECS, EC2, and ECR
+
+## How To Run
+Run `npm run dev`
 
 ## Deployment Process
 1. See this [blog](https://www.freecodecamp.org/news/how-to-deploy-a-node-js-application-to-amazon-web-services-using-docker-81c2a2d7225b/)
