@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import tw from "tailwind-styled-components";
-import { socketEvents } from "../constants";
+import { getLatestMessage, socketEvents } from "../constants";
 import { socket } from "../context/socket";
 import useChats from "../custom-hooks/useChats";
 import loadActions from "../redux/actions/LoadAction";
@@ -74,7 +74,13 @@ export default function ChatList({ chats }) {
         socket.on(SEND_MESSAGE_SUCCESS, (updatedChat) => {
             dispatch(userActions.setChats(
                 // Update chat list to display new message as latest message
-                chats.map(chat => (updatedChat._id === chat._id) ? updatedChat : chat),
+                chats.map(chat => (updatedChat._id === chat._id) 
+                    ?   { 
+                            ...chat, 
+                            latestMsg: getLatestMessage(updatedChat.messages, userInfo.user._id) 
+                        }
+                    : chat
+                )
             ));
         });
 

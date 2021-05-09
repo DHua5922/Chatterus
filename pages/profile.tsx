@@ -205,6 +205,7 @@ function MainContent() {
                     const { username, email } = success.data;
                     dispatch(signUpActions.updateUsername(username));
                     dispatch(signUpActions.updateEmail(email));
+                    dispatch(loadActions.success([]));
                     setProfile(success.data);
                 })
                 .catch(() => dispatch(loadActions.fail("Cannot load profile. Please try again.")));

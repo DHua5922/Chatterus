@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import ChatService from "../api/services/ChatService";
+import loadActions from "../redux/actions/LoadAction";
 import userActions from "../redux/actions/UserAction";
 import { RootState } from "../redux/reducers/allReducer";
 
@@ -20,6 +21,7 @@ export default function useChats() {
      */
     function onGetChats(success) {
         const { chats, _id, ...rest } = success.data;
+        dispatch(loadActions.success(""))
         dispatch(userActions.setAll({_id, ...rest}, chats, null, ""));
     }
 

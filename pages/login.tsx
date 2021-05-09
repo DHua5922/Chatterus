@@ -78,7 +78,10 @@ function useOnSubmit(): Function {
         dispatch(loadActions.pending());
         axios
             .post("auth/login", fieldValues)
-            .then(() => router.push(pageLinks.dashboard))
+            .then(() => {
+                dispatch(loadActions.success(""));
+                router.push(pageLinks.dashboard);
+            })
             .catch(error => {
                 if(error.response && error.response.status === 400) {
                     // Invalid login information

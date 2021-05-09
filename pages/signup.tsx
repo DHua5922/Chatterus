@@ -97,7 +97,10 @@ function useOnSubmit(): Function {
         dispatch(loadActions.pending());
         UserService
             .signUp(newUser)
-            .then(() => router.push(pageLinks.login))
+            .then(() => {
+                dispatch(loadActions.success(""));
+                router.push(pageLinks.login);
+            })
             .catch(error => {
                 if(error.response && error.response.status === 400) {
                     // Invalid new user information

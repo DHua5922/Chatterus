@@ -34,7 +34,7 @@ const ListContainer = tw.div`
 
 function MainContent() {
     const dispatch = useDispatch();
-    const { chosenChatId, chats, user, chosenChat } = useChats();
+    const { chosenChatId, chats, user } = useChats();
     const modal = useCreateChatPrompt(
         user ? user._id : "", 
         chats ? chats: []

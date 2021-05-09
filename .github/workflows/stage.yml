@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-t7b4xp_Revamp-dashboard
+      - CU-uz944f_Fix-loading-issues
 
 jobs:
   build:

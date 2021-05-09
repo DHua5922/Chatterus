@@ -1,16 +1,30 @@
 # Chatterus
 Website for users to chat with each other.
 
+## Demo
+Click [here](https://chatterus.herokuapp.com/) to see demo.
+
+Use test credentials:
+* Username: guest123
+* Password: guest123
+
+## How To Run In Development
+Run the development server with `yarn dev` or `npm run dev`. Make sure to run the [backend](https://github.com/DHua5922/chatterus-backend) too.
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+To test application in docker, modify `"start"` in `package.json` to `next start`. Then, run `npm run docker-start`. When deploying to staging or production, be sure to change `"start"` back to `next start -p $PORT`.
+
 ## Technologies
-* Next.js
-* React
+* Next.js (React framework)
 * Material UI
 * TypeScript
 * HTML5
 * CSS3
 * Tailwind
 * Styled Components
-* ClickUp
+* Redux
+* Docker
 
 ## Task Completion Process
 1. Go to ClickUp and pick a task to complete.
@@ -20,19 +34,4 @@ Website for users to chat with each other.
 4. Create a pull request and wait for the CI/CD process to complete.
 5. Request reviews from appropriate members.
 6. When all members approve of the pull request, merge the pull request using the `squash and merge` option.
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-To test application in docker, modify `"start"` in `package.json` to `next start`. Then, run `npm run docker-start`. When deploying to staging or production, be sure to change `"start"` back to `next start -p $PORT`.
+7. Update your code in development environment with the latest code on GitHub by running `git checkout main && git pull`.
