@@ -10,7 +10,7 @@ import { Socket } from "socket.io-client";
 import { socket, SocketContext } from "../context/socket";
 import loadActions from "../redux/actions/LoadAction";
 import { socketEvents } from "../constants";
-import { Message, User, UserState } from "../redux/reducers/UserReducer";
+import { Chat, Message, User, UserState } from "../redux/reducers/UserReducer";
 import { AxiosResponse } from "axios";
 
 const PromptContainer = tw.div`
@@ -123,13 +123,32 @@ function ChosenChat({ chatId }: Props) {
         SEND_MESSAGE_SUCCESS,
         ON_DELETE_CHAT_ADMIN,
         ON_DELETE_CHAT_NON_ADMIN,
+        ADMIN_UPDATE_CHAT,
+        LEAVE_CHAT,
     } = socketEvents;
 
     const [chat, setChat] = useState(null as CurrentChat);
 
+
     useEffect(() => {
         socket.on(DELETE_CHAT_ERROR, (error) => {
             dispatch(loadActions.fail(error.message));
+        });
+
+        socket.on(ON_DELETE_CHAT_ADMIN, () => {
+            dispatch(loadActions.success(""));
+            setChat(null);
+            dispatch(userActions.chooseChat(""));
+        });
+
+        socket.on(ON_DELETE_CHAT_NON_ADMIN, (deletedChatId: string) => {
+            dispatch(userActions.removeChat(deletedChatId));
+            setChat((deletedChatId === chatId) ? null : chat);
+            dispatch(userActions.chooseChat((deletedChatId === chatId) ? "" : chatId));
+        });
+
+        socket.on(LEAVE_CHAT, () => {
+            setChat(null);
         });
 
         () => socket.close();
@@ -152,15 +171,9 @@ function ChosenChat({ chatId }: Props) {
             }
         });
 
-        socket.on(ON_DELETE_CHAT_ADMIN, () => {
-            dispatch(loadActions.success(""));
-            setChat(null);
-            dispatch(userActions.chooseChat(""));
-        });
-
-        socket.on(ON_DELETE_CHAT_NON_ADMIN, (deletedChatId: string) => {
-            setChat((deletedChatId === chatId) ? null : chat);
-            dispatch(userActions.chooseChat((deletedChatId === chatId) ? "" : chatId));
+        socket.on(ADMIN_UPDATE_CHAT, ({ title }: Chat) => {
+            // Updates the admin's chat view
+            if(chat) setChat({...chat, title})
         });
 
         () => socket.close();

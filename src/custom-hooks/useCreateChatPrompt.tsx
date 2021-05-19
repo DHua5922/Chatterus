@@ -32,8 +32,8 @@ function useCreateChatResponses(userId: string) {
      * @param {Chat[]} chats Chat list.
      * @param {Chat} newChat Created chat. 
      */
-    function onCreateChat(chats: Chat[], newChat: Chat) {
-        dispatch(userActions.setChatList([...chats, newChat]));
+    function onCreateChat(newChat: Chat) {
+        dispatch(userActions.addChat(newChat));
         dispatch(loadActions.success("Chat created."))
         dispatch(promptActions.close());
         dispatch(userActions.chooseChat(newChat._id));
@@ -74,7 +74,7 @@ function useCreateChatResponses(userId: string) {
  * @param {Chat[]} chats Chat list.
  * @returns {any} Prompt props.
  */
-export default function useCreateChatPrompt(userId : string, chats: Chat[]) {
+export default function useCreateChatPrompt(userId : string) {
     const dispatch = useDispatch();
     const { open, promptToOpen }: PromptState = useSelector((state: RootState) => state.promptReducer);
     const { success, error, isPending } = useSelector((state: RootState) => state.loadReducer);
@@ -88,7 +88,7 @@ export default function useCreateChatPrompt(userId : string, chats: Chat[]) {
      */
     function onClickCreateChatButton(chatName: string) {
         onCreatingChat(chatName)
-            .then(success => onCreateChat(chats, success.data))
+            .then(success => onCreateChat(success.data))
             .catch(error => onCreateChatError(error)); 
     }
 

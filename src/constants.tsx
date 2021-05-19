@@ -2,6 +2,7 @@ import AuthService from "./api/services/AuthService";
 import ChatService from "./api/services/ChatService";
 import PasswordService from "./api/services/PasswordService";
 import UserService from "./api/services/UserService";
+import { Message } from "./redux/reducers/UserReducer";
 
 export const pageLinks = {
     login: "/login",
@@ -40,7 +41,10 @@ export const redux = {
     SET_CHATS: "SET_CHATS",
     SET_ALL: "SET_ALL",
     SHOW_PROMPT: "SHOW_PROMPT",
-    CLOSE_PROMPT: "CLOSE_PROMPT"
+    CLOSE_PROMPT: "CLOSE_PROMPT",
+    ADD_CHAT: "ADD_CHAT",
+    REMOVE_CHAT: "REMOVE_CHAT",
+    UPDATE_CHAT: "UPDATE_CHAT",
 };
 
 export const prompt = {
@@ -54,26 +58,11 @@ export const prompt = {
 
 export const socketEvents = {
     NON_ADMIN_UPDATE_CHAT: "NON_ADMIN_UPDATE_CHAT",
+    ADMIN_UPDATE_CHAT: "ADMIN_UPDATE_CHAT",
     ON_JOIN_CHAT: "ON_JOIN_CHAT",
     SEND_MESSAGE_SUCCESS: "SEND_MESSAGE_SUCCESS",
     ON_DELETE_CHAT_ADMIN: "ON_DELETE_CHAT_ADMIN",
     ON_DELETE_CHAT_NON_ADMIN: "ON_DELETE_CHAT_NON_ADMIN",
     DELETE_CHAT_ERROR: "DELETE_CHAT_ERROR",
+    LEAVE_CHAT: "LEAVE_CHAT",
 };
-
-/**
- * Gets the most recent message in the chat.
- * 
- * @param {any[]} messages Chat messages.
- * @param {string} userAccountId User id.
- * @returns {string} Most recent message in the chat.
- */
-export function getLatestMessage(messages, userAccountId: string): string {
-    let latestMsg = "";
-    const lastMsg = messages[messages.length - 1];
-    if(lastMsg) {
-        const { message, userId } = lastMsg;
-        latestMsg = `${(userId._id === userAccountId) ? "You" : userId.username}: ${message}`;
-    }
-    return latestMsg;
-}

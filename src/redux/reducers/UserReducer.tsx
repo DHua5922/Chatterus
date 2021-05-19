@@ -38,17 +38,39 @@ const defaultState: UserState = {
 function UserReducer(state: UserState = defaultState, action: UserAction): UserState {
     const { type, payload } = action;
 
-    if(type === redux.CHOOSE_CHAT) {
+    if(type === redux.SET_USER) {
+        return {
+            ...state,
+            user: payload as User
+        }
+    }
+    else if(type === redux.ADD_CHAT) {
+        return {
+            ...state,
+            chats: (state.chats ? [...state.chats, payload as Chat] : [payload as Chat]) as Chat[]
+        }
+    }
+    else if(type === redux.REMOVE_CHAT) {
+        return {
+            ...state,
+            chats: state.chats.filter(({ _id }: Chat) => _id !== payload as string) as Chat[]
+        }
+    } else if(type === redux.UPDATE_CHAT) {
+        return {
+            ...state,
+            chats: state.chats.map((chat: Chat) => (chat._id !== (payload as Chat)._id) ? chat : payload) as Chat[]
+        }
+    } else if(type === redux.SET_CHATS) {
+        return {
+            ...state,
+            chats: payload as Chat[]
+        }
+    }
+    else if(type === redux.CHOOSE_CHAT) {
         return {
             ...state,
             chosenChatId: payload as string
         }
-    }
-    else if(type === redux.SET_CHATS) {
-        return {
-            ...state,
-            chats: payload as Chat[]
-        };
     }
     else if(type === redux.SET_ALL) {
         return payload as UserState;

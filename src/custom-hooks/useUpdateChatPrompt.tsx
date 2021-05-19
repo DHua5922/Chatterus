@@ -41,7 +41,6 @@ export default function useUpdateChatPrompt(chat: ChatForPrompt) {
     const dispatch = useDispatch();
     const { open, promptToOpen }: PromptState = useSelector((state: RootState) => state.promptReducer);
     const { success, error, isPending } = useSelector((state: RootState) => state.loadReducer);
-    const { chats }: UserState = useSelector((state: RootState) => state.userReducer);
     const [title, setTitle] = useState(chat.title as string);
     const socket: Socket = useContext(SocketContext);
 
@@ -58,21 +57,9 @@ export default function useUpdateChatPrompt(chat: ChatForPrompt) {
 
     useEffect(() => {
         socket.on("ADMIN_UPDATE_CHAT", (updatedChat: Chat) => {
-            // Updates the chat admin's chat list and the chat
-            // being viewed
+            // Close prompt
             dispatch(loadActions.success(""));
             dispatch(promptActions.close());
-            chats.some((existingChat: Chat, index: number) => {
-                if(existingChat._id === updatedChat._id) {
-                    dispatch(userActions.setChatList([
-                        ...chats.slice(0, index),
-                        updatedChat,
-                        ...chats.slice(index + 1)
-                    ]));
-                    return true;
-                }
-                return false;
-            });
         });
     }, []);
 

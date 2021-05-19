@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-vn7v63_Type-check-dashboard
+      - CU-vx7cdb_Fix-bug-in-modifying-chat-list
 
 jobs:
   build:

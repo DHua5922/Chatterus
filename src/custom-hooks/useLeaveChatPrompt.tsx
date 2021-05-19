@@ -9,7 +9,7 @@ import loadActions from '../redux/actions/LoadAction';
 import { prompt } from '../constants';
 import userActions from '../redux/actions/UserAction';
 import { PromptState } from '../redux/reducers/PromptReducer';
-import { Chat, UserState } from '../redux/reducers/UserReducer';
+import { UserState } from '../redux/reducers/UserReducer';
 
 const PromptButton = tw.button`
     bg-red-600
@@ -28,7 +28,7 @@ export default function useLeaveChatPrompt(chatId: string) {
     const dispatch = useDispatch();
     const { open, promptToOpen }: PromptState = useSelector((state: RootState) => state.promptReducer);
     const { success, error, isPending } = useSelector((state: RootState) => state.loadReducer);
-    const { user, chats }: UserState = useSelector((state: RootState) => state.userReducer);
+    const { user }: UserState = useSelector((state: RootState) => state.userReducer);
     const socket: Socket = useContext(SocketContext);
 
     function onLeavingChat(userId: string, chatId: string) {
@@ -41,14 +41,10 @@ export default function useLeaveChatPrompt(chatId: string) {
             dispatch(loadActions.fail(error));
         });
     
-        socket.on("LEAVE_CHAT", (chatId: string) => {
+        socket.on("LEAVE_CHAT", () => {
             dispatch(loadActions.success(""));
             dispatch(promptActions.close());
-            dispatch(userActions.setAll(
-                user,
-                chats.filter(({ _id }: Chat) => _id !== chatId),
-                "",
-            ));
+            dispatch(userActions.removeChat(chatId));
         });
 
         () => socket.disconnect();

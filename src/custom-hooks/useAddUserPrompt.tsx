@@ -107,7 +107,7 @@ export default function useAddUserPrompt(chatId: string) {
             const isInvited: boolean = invitedUsernameList.some((username: string) => user.username === username);
             const isAlreadyInChatList: boolean = chats.some((existingChat: Chat) => existingChat._id === chat._id);
             if(isInvited && !isAlreadyInChatList) {
-                dispatch(userActions.setChatList(chats.concat([chat])))
+                dispatch(userActions.addChat(chat));
             }
         });
     }, []);
