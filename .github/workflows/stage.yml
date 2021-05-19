@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-vx7cdb_Fix-bug-in-modifying-chat-list
+      - CU-vx7kdz_Remove-extra-redux
 
 jobs:
   build:

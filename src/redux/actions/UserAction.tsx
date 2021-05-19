@@ -43,15 +43,6 @@ const userActions = {
             payload: chat as Chat[]
         }
     },
-    setAll: (user: User, chosenChatId: string): UserAction => {
-        return {
-            type: redux.SET_ALL,
-            payload: {
-                user,
-                chosenChatId,
-            } as UserState,
-        };
-    },
 };
 
 export type { UserAction };

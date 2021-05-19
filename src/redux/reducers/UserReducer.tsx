@@ -72,9 +72,6 @@ function UserReducer(state: UserState = defaultState, action: UserAction): UserS
             chosenChatId: payload as string
         }
     }
-    else if(type === redux.SET_ALL) {
-        return payload as UserState;
-    }
     
     return state;
 }
