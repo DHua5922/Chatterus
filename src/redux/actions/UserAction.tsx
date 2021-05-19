@@ -1,41 +1,35 @@
 import { redux } from "../../constants";
+import { Chat, User, UserState } from "../reducers/UserReducer";
+
+interface UserAction {
+    type: string
+    payload: string | UserState | Chat[]
+}
 
 const userActions = {
-    setUser: (user) => {
-        return {
-            type: redux.SET_USER,
-            payload: user,
-        };
-    },
-    setChosenChat: (chosenChat) => {
-        return {
-            type: redux.SET_CHOSEN_CHAT,
-            payload: chosenChat,
-        };
-    },
-    chooseChat: (chatId: string) => {
+    chooseChat: (chatId: string): UserAction => {
         return {
             type: redux.CHOOSE_CHAT,
             payload: chatId,
         };
     },
-    setChats: (chats) => {
+    setChatList: (chats: Chat[]): UserAction => {
         return {
             type: redux.SET_CHATS,
-            payload: chats,
-        };
+            payload: chats
+        }
     },
-    setAll: (user, chats, chosenChat, chosenChatId: string) => {
+    setAll: (user: User, chats: Chat[], chosenChatId: string): UserAction => {
         return {
             type: redux.SET_ALL,
             payload: {
-                user: user,
-                chats: chats,
-                chosenChat: chosenChat,
-                chosenChatId: chosenChatId,
+                user,
+                chats,
+                chosenChatId,
             },
         };
     },
 };
 
+export type { UserAction };
 export default userActions;

@@ -10,6 +10,8 @@ import { prompt } from '../constants';
 import { Chip, MenuItem, Select } from '@material-ui/core';
 import UserService from '../api/services/UserService';
 import userActions from '../redux/actions/UserAction';
+import { PromptState } from '../redux/reducers/PromptReducer';
+import { Chat, UserState } from '../redux/reducers/UserReducer';
 
 const PromptButton = tw.button`
     bg-blue-500
@@ -24,19 +26,24 @@ const MyChip = tw(Chip)`
     m-1
 `;
 
+interface UserToInvite {
+    username: string
+    _id: string
+}
+
 /**
  * Gets all the other users.
  * 
  * @param {string} userId Id of logged in user.
- * @returns {any[]} All the other users.
+ * @returns {UserToInvite[]} All the other users.
  */
-function getAllUsers(userId: string) {
-    const [users, setUsers] = useState([]);
+function getAllUsers(userId: string): UserToInvite[] {
+    const [users, setUsers] = useState([] as UserToInvite[]);
 
     useEffect(() => {
         if(users.length === 0) {
             UserService.getAllUsers()
-                .then(success => setUsers(success.data.filter(user => userId !== user._id)));
+                .then(success => setUsers(success.data.filter(({_id}: UserToInvite) => userId !== _id) as UserToInvite[]));
         }
     }, [users]);
 
@@ -76,32 +83,31 @@ function useAddUsersResponses() {
  */
 export default function useAddUserPrompt(chatId: string) {
     const dispatch = useDispatch();
-    const { open, promptToOpen } = useSelector((state: RootState) => state.promptReducer);
+    const { open, promptToOpen }: PromptState = useSelector((state: RootState) => state.promptReducer);
     const { success, error, isPending } = useSelector((state: RootState) => state.loadReducer);
     const [usersToInvite, setUsersToInvite] = useState([] as string[]);
     const { onAddingUsers } = useAddUsersResponses();
-    const { user, chats } = useSelector((state: RootState) => state.userReducer);
-    const users = getAllUsers(user._id);
+    const { user, chats }: UserState = useSelector((state: RootState) => state.userReducer);
+    const users: UserToInvite[] = getAllUsers(user._id);
     const socket: Socket = useContext(SocketContext);
 
     useEffect(() => {
-        socket.on("INVITE_USERS_SUCCESS", (data) => {
-            if(data === user._id)
+        socket.on("INVITE_USERS_SUCCESS", (inviterId: string) => {
+            if(inviterId === user._id)
                 dispatch(loadActions.success("Invitation sent."));
         });
     
-        socket.on("INVITE_USERS_ERROR", (error) => {
-            if(error.inviterId === user._id)
-                dispatch(loadActions.fail(error.message));
+        socket.on("INVITE_USERS_ERROR", ({ inviterId, message }: { inviterId: string, message: string }) => {
+            if(inviterId === user._id)
+                dispatch(loadActions.fail(message));
         });
 
-        socket.on("ON_JOIN_CHAT", (data) => {
+        socket.on("ON_JOIN_CHAT", ({ invitedUsernameList, chat }: { invitedUsernameList: string[], chat: Chat }) => {
             // After being added to chat, update chat preview list
-            const { invitedUsernameList, chat } = data;
-            const isInvited = invitedUsernameList.some(username => user.username === username);
-            const isAlreadyInChatList = chats.some(existingChat => existingChat._id === chat._id);
+            const isInvited: boolean = invitedUsernameList.some((username: string) => user.username === username);
+            const isAlreadyInChatList: boolean = chats.some((existingChat: Chat) => existingChat._id === chat._id);
             if(isInvited && !isAlreadyInChatList) {
-                dispatch(userActions.setChats(chats.concat([chat])))
+                dispatch(userActions.setChatList(chats.concat([chat])))
             }
         });
     }, []);
@@ -129,14 +135,11 @@ export default function useAddUserPrompt(chatId: string) {
                     )}
                 >
                     {
-                        users.map(user => {
-                            const { _id, username } = user;
-                            return (
-                                <MenuItem key={_id} value={username}>
-                                    {username}
-                                </MenuItem>
-                            );
-                        })
+                        users.map(({ _id, username }: UserToInvite) => (
+                            <MenuItem key={_id} value={username}>
+                                {username}
+                            </MenuItem>
+                        ))
                     }
                 </MySelect>
             </>

@@ -1,5 +1,4 @@
 import React from "react";
-import userActions from "../src/redux/actions/UserAction";
 import ChatList from "../src/views/ChatList";
 import ChosenChat from "../src/views/ChosenChat";
 import { useDispatch } from "react-redux";
@@ -8,12 +7,13 @@ import tw from "tailwind-styled-components";
 import promptActions from "../src/redux/actions/PromptAction";
 import Prompt from "../src/views/Prompt";
 import Loading from "../src/views/Loading";
-import { getLatestMessage, prompt } from "../src/constants";
-import useFilter from "../src/custom-hooks/useFilter";
+import { prompt } from "../src/constants";
 import useCreateChatPrompt from "../src/custom-hooks/useCreateChatPrompt";
 import useChats from "../src/custom-hooks/useChats";
 import Page from "../src/views/Page";
 import UserPage from "../src/views/UserPage";
+import { UserState } from "../src/redux/reducers/UserReducer";
+import useFilter from "../src/custom-hooks/useFilter";
 
 const AddCircleIcon = tw(AddCircle)`
     h-16
@@ -33,12 +33,9 @@ const ListContainer = tw.div`
 `;
 
 function MainContent() {
+    const { user, chats, chosenChatId }: UserState = useChats();
     const dispatch = useDispatch();
-    const { chosenChatId, chats, user } = useChats();
-    const modal = useCreateChatPrompt(
-        user ? user._id : "", 
-        chats ? chats: []
-    );
+    const createChatModal = useCreateChatPrompt(user && user._id, chats)
     const { input, elem } = useFilter();
 
     let componentToRender;
@@ -46,30 +43,15 @@ function MainContent() {
         // Load dashboard
         componentToRender = <div className="m-auto"><Loading /></div>;
     } else {
-        // Display dashbaord
-        let chatPreviewList = chats.map(chat => {
-            return {
-                ...chat,
-                latestMsg: getLatestMessage(chat.messages, user._id),
-                onClick: () => dispatch(userActions.chooseChat(chat._id))
-            };
-        });
-        chatPreviewList = chatPreviewList.filter(chat => {
-            const chatTitleToCheck = chat.title.trim().toLowerCase();
-            const desiredChatTitle = input.trim().toLowerCase();
-            return chatTitleToCheck.includes(desiredChatTitle);
-        });
         componentToRender = (
             <>
                 <ListContainer>
                     {elem}
-                    <ChatList chats={chatPreviewList} />
+                    <ChatList input={input} />
                     <AddCircleIcon onClick={() => dispatch(promptActions.show(prompt.CREATE_CHAT))} />
                 </ListContainer>
                 <ChosenChat chatId={chosenChatId} />
-                <Prompt 
-                    modal={modal} 
-                />
+                <Prompt modal={createChatModal} />
             </>
         );
     }

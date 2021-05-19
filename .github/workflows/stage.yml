@@ -3,7 +3,7 @@ name: Deploy To Staging
 on:
   push:
     branches:
-      - CU-uz9dtj_Remove-whitespace-in-homepage
+      - CU-vn7v63_Type-check-dashboard
 
 jobs:
   build:

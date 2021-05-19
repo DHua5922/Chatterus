@@ -1,17 +1,19 @@
+import { AxiosResponse } from "axios";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import ChatService from "../api/services/ChatService";
 import loadActions from "../redux/actions/LoadAction";
 import userActions from "../redux/actions/UserAction";
 import { RootState } from "../redux/reducers/allReducer";
+import { UserState } from "../redux/reducers/UserReducer";
 
 /**
  * Custom hook for getting user information and chats.
  * 
  * @returns {any} User information and chats.
  */
-export default function useChats() {
-    const { chats, user, chosenChatId, chosenChat } = useSelector((state: RootState) => state.userReducer);
+export default function useChats(): UserState {
+    const { chats, user, chosenChatId }: UserState = useSelector((state: RootState) => state.userReducer);
     const dispatch = useDispatch();
 
     /**
@@ -19,10 +21,10 @@ export default function useChats() {
      * 
      * @param {AxiosResponse<any>} success Success response.
      */
-    function onGetChats(success) {
-        const { chats, _id, ...rest } = success.data;
+    function onGetChats({ data }: AxiosResponse<any>) {
+        const { chats, ...rest } = data;
         dispatch(loadActions.success(""))
-        dispatch(userActions.setAll({_id, ...rest}, chats, null, ""));
+        dispatch(userActions.setAll({...rest}, chats, ""));
     }
 
     /**
@@ -36,5 +38,5 @@ export default function useChats() {
             .catch(error => console.log(error.response));
     }, []);
 
-    return { chats, user, chosenChatId, chosenChat };
+    return { chats, user, chosenChatId };
 }

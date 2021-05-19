@@ -10,6 +10,8 @@ import { RootState } from '../redux/reducers/allReducer';
 import { Edit } from "@styled-icons/entypo/Edit";
 import { Trash } from "@styled-icons/boxicons-solid/Trash";
 import usePrompt from '../custom-hooks/usePrompt';
+import { CurrentChat } from './ChosenChat';
+import { UserState } from '../redux/reducers/UserReducer';
 
 const Header = tw.div`
     bg-white
@@ -41,22 +43,27 @@ const TrashIcon = tw(Trash)`
     ml-4
 `;
 
-export default function ChatHeader({ chat }) {
+interface Props {
+    chat: CurrentChat
+}
+
+export default function ChatHeader({ chat }: Props) {
     const dispatch = useDispatch();
     const modal = usePrompt(chat);
-    const { user } = useSelector((state: RootState) => state.userReducer);
+    const { user }: UserState = useSelector((state: RootState) => state.userReducer);
+    const { title, admin } = chat;
 
     return (
         <Header>
-            <div>{chat.title}</div>
+            <div>{title}</div>
             <div>
                 <PersonAddIcon onClick={() => dispatch(promptActions.show(prompt.ADD_USERS))} />
                 {
-                    chat.admin._id !== user._id &&
+                    admin._id !== user._id &&
                         <LeaveChatIcon onClick={() => dispatch(promptActions.show(prompt.LEAVE_CHAT))} />
                 }
                 {
-                    chat.admin._id === user._id &&
+                    admin._id === user._id &&
                         <>
                             <EditIcon onClick={() => dispatch(promptActions.show(prompt.UPDATE_CHAT))} />
                             <TrashIcon onClick={() => dispatch(promptActions.show(prompt.DELETE_CHAT))} />

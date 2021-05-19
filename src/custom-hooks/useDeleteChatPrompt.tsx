@@ -7,6 +7,7 @@ import { SocketContext } from '../context/socket';
 import { Socket } from 'socket.io-client';
 import loadActions from '../redux/actions/LoadAction';
 import { prompt } from '../constants';
+import { PromptState } from '../redux/reducers/PromptReducer';
 
 const PromptButton = tw.button`
     bg-red-600
@@ -18,12 +19,12 @@ const PromptButton = tw.button`
 /**
  * Custom hook for creating prompt to delete chat.
  * 
- * @param {any} chat Chat to delete. 
+ * @param {string} chatId id of chat to delete. 
  * @returns {any} Prompt props.
  */
-export default function useDeleteChatPrompt(chat: any) {
+export default function useDeleteChatPrompt(chatId: string) {
     const dispatch = useDispatch();
-    const { open, promptToOpen } = useSelector((state: RootState) => state.promptReducer);
+    const { open, promptToOpen }: PromptState = useSelector((state: RootState) => state.promptReducer);
     const { success, error, isPending } = useSelector((state: RootState) => state.loadReducer);
     const socket: Socket = useContext(SocketContext);
 
@@ -51,7 +52,7 @@ export default function useDeleteChatPrompt(chat: any) {
         props: {},
         children: <div className="flex justify-center">
             <PromptButton 
-                onClick={() => onDeletingChat(chat._id)} 
+                onClick={() => onDeletingChat(chatId)} 
             >
                 Delete chat
             </PromptButton>

@@ -8,6 +8,8 @@ import loadActions from "../redux/actions/LoadAction";
 import promptActions from "../redux/actions/PromptAction";
 import userActions from "../redux/actions/UserAction";
 import { RootState } from "../redux/reducers/allReducer";
+import { Chat, UserState } from "../redux/reducers/UserReducer";
+import { PromptState } from "../redux/reducers/PromptReducer";
 
 const PromptButton = tw.button`
     bg-blue-500
@@ -24,18 +26,23 @@ const Input = tw.input`
     bg-gray-50
 `;
 
+interface ChatForPrompt {
+    title: string
+    _id: string
+}
+
 /**
  * Custom hook for prompt for updating the chat.
  * 
- * @param {any} chat Chat being viewed.
+ * @param {ChatForPrompt} chat Chat being viewed.
  * @returns {any} Prompt props
  */
-export default function useUpdateChatPrompt(chat: any) {
+export default function useUpdateChatPrompt(chat: ChatForPrompt) {
     const dispatch = useDispatch();
-    const { open, promptToOpen } = useSelector((state: RootState) => state.promptReducer);
+    const { open, promptToOpen }: PromptState = useSelector((state: RootState) => state.promptReducer);
     const { success, error, isPending } = useSelector((state: RootState) => state.loadReducer);
-    const { user, chats } = useSelector((state: RootState) => state.userReducer);
-    const [title, setTitle] = useState(chat.title);
+    const { chats }: UserState = useSelector((state: RootState) => state.userReducer);
+    const [title, setTitle] = useState(chat.title as string);
     const socket: Socket = useContext(SocketContext);
 
     /**
@@ -50,23 +57,18 @@ export default function useUpdateChatPrompt(chat: any) {
     }
 
     useEffect(() => {
-        socket.on("ADMIN_UPDATE_CHAT", (updatedChat) => {
+        socket.on("ADMIN_UPDATE_CHAT", (updatedChat: Chat) => {
             // Updates the chat admin's chat list and the chat
             // being viewed
             dispatch(loadActions.success(""));
             dispatch(promptActions.close());
-            chats.some((existingChat, index: number) => {
+            chats.some((existingChat: Chat, index: number) => {
                 if(existingChat._id === updatedChat._id) {
-                    dispatch(userActions.setAll(
-                        user,
-                        [
-                            ...chats.slice(0, index),
-                            updatedChat,
-                            ...chats.slice(index + 1)
-                        ],
+                    dispatch(userActions.setChatList([
+                        ...chats.slice(0, index),
                         updatedChat,
-                        updatedChat._id
-                    ));
+                        ...chats.slice(index + 1)
+                    ]));
                     return true;
                 }
                 return false;

@@ -10,6 +10,8 @@ import { Socket } from "socket.io-client";
 import { socket, SocketContext } from "../context/socket";
 import loadActions from "../redux/actions/LoadAction";
 import { socketEvents } from "../constants";
+import { Message, User, UserState } from "../redux/reducers/UserReducer";
+import { AxiosResponse } from "axios";
 
 const PromptContainer = tw.div`
     w-full 
@@ -27,7 +29,7 @@ const ChatContainer = tw.div`
     min-w-330px
 `;
 
-const Chat = tw.div`
+const ChatPanel = tw.div`
     overflow-y-auto
     absolute
     w-full
@@ -60,10 +62,14 @@ const MessageDate = tw.div`
     text-gray-600
 `;
 
-function MessageDisplay({ userId, message, createdAt, loggedInUserId }) {
+function MessageDisplay(
+    { userId, createdAt, message, ...props }: 
+        { userId: User, createdAt: string, message: string }
+) {
+    const { user }: UserState = useSelector((state: RootState) => state.userReducer)
     const { _id, username } = userId;
     return (
-        <MessageContainer backgroundColor={(_id === loggedInUserId) && "bg-blue-200"}>
+        <MessageContainer backgroundColor={(_id === user._id) && "bg-blue-200"} {...props}>
             <Username>{username}</Username>
             <div className="py-1">{message}</div>
             <MessageDate>
@@ -73,7 +79,10 @@ function MessageDisplay({ userId, message, createdAt, loggedInUserId }) {
     );
 }
 
-function SendMessageInput({ userId, chatId }) {
+function SendMessageInput(
+    { userId, chatId }: 
+        { userId: string, chatId: string }
+) {
     const socket: Socket = useContext(SocketContext);
     const [message, setMessage] = useState("" as string);
 
@@ -93,14 +102,30 @@ function SendMessageInput({ userId, chatId }) {
     );
 }
 
-export default function ChosenChat({ chatId }) {
-    const { chosenChat, user } = useSelector((state: RootState) => state.userReducer);
+interface CurrentChat {
+    admin: User
+    createdAt: string
+    messages: Message[]
+    title: string
+    _id: string
+}
+
+interface Props {
+    chatId: string
+}
+
+function ChosenChat({ chatId }: Props) {
     const dispatch = useDispatch();
+    const { user }: UserState = useSelector((state: RootState) => state.userReducer);
     const { 
         DELETE_CHAT_ERROR, 
         NON_ADMIN_UPDATE_CHAT, 
-        SEND_MESSAGE_SUCCESS 
+        SEND_MESSAGE_SUCCESS,
+        ON_DELETE_CHAT_ADMIN,
+        ON_DELETE_CHAT_NON_ADMIN,
     } = socketEvents;
+
+    const [chat, setChat] = useState(null as CurrentChat);
 
     useEffect(() => {
         socket.on(DELETE_CHAT_ERROR, (error) => {
@@ -111,36 +136,45 @@ export default function ChosenChat({ chatId }) {
     }, []);
 
     useEffect(() => {
-        socket.on(NON_ADMIN_UPDATE_CHAT, (updatedChat) => {
+        socket.on(NON_ADMIN_UPDATE_CHAT, (updatedChat: CurrentChat) => {
             // If the non-admin user is viewing the same 
             // updated chat as admin, update the chat view
-            if(chosenChat && chosenChat._id === updatedChat._id) {
-                dispatch(userActions.setChosenChat(updatedChat));
+            if(chat && chat._id === updatedChat._id) {
+                setChat(updatedChat);
             }
         });
 
-        socket.on(SEND_MESSAGE_SUCCESS, (updatedChat) => {
-            if(chosenChat && chosenChat._id === updatedChat._id) {
+        socket.on(SEND_MESSAGE_SUCCESS, (updatedChat: CurrentChat) => {
+            if(chat && chat._id === updatedChat._id) {
                 // If user is seeing chat where a new 
                 // message was sent, display that message
-                dispatch(userActions.setChosenChat(updatedChat))
+                setChat(updatedChat);
             }
+        });
+
+        socket.on(ON_DELETE_CHAT_ADMIN, () => {
+            dispatch(loadActions.success(""));
+            setChat(null);
+            dispatch(userActions.chooseChat(""));
+        });
+
+        socket.on(ON_DELETE_CHAT_NON_ADMIN, (deletedChatId: string) => {
+            setChat((deletedChatId === chatId) ? null : chat);
+            dispatch(userActions.chooseChat((deletedChatId === chatId) ? "" : chatId));
         });
 
         () => socket.close();
-    }, [chosenChat]);
+    }, [chat]);
 
     useEffect(() => {
         if(chatId) {
             ChatService
                 .getChat(chatId)
-                .then(response => {
-                    dispatch(userActions.setChosenChat(response.data));
-                });
+                .then(({ data }: AxiosResponse<any>) => setChat(data as CurrentChat));
         }
     }, [chatId]);
 
-    if(!chosenChat)
+    if(!chat)
         return (
             <PromptContainer>
                 <Prompt>
@@ -149,28 +183,23 @@ export default function ChosenChat({ chatId }) {
             </PromptContainer>
         );
 
-    const { messages } = chosenChat;
     return (
         <ChatContainer>
-            <ChatHeader chat={chosenChat} />
-            
-            <Chat>
-                <div>
-                    { 
-                        messages.map(message => (
-                            <MessageDisplay 
-                                {...message} 
-                                loggedInUserId={user._id} 
-                            />
-                        )) 
-                    }
-                </div>
-            </Chat>
-
-            <SendMessageInput 
-                userId={user._id}
-                chatId={chatId} 
-            />
+            <ChatHeader chat={chat} />
+            <ChatPanel>
+                { 
+                    chat.messages.map(({ _id, ...rest }: Message) => (
+                        <MessageDisplay 
+                            key={_id}
+                            {...rest} 
+                        />
+                    )) 
+                }
+            </ChatPanel>
+            <SendMessageInput userId={user._id} chatId={chatId} />
         </ChatContainer>
     );
 }
+
+export type { CurrentChat }
+export default ChosenChat;

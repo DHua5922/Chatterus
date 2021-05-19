@@ -1,11 +1,17 @@
 import { redux } from "../../constants";
+import { PromptAction } from "../actions/PromptAction";
 
-const initialState = {
+interface PromptState {
+    open: boolean
+    promptToOpen: string
+}
+
+const initialState: PromptState = {
     open: false,
-    promptToOpen: "" as string,
+    promptToOpen: "",
 };
 
-export default function PromptReducer(state = initialState, action) {
+function PromptReducer(state: PromptState = initialState, action: PromptAction): PromptState {
     const { type, payload } = action;
     
     if(type === redux.SHOW_PROMPT) {
@@ -22,3 +28,6 @@ export default function PromptReducer(state = initialState, action) {
 
     return state;
 }
+
+export type { PromptState };
+export default PromptReducer;

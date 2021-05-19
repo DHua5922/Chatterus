@@ -1,18 +1,19 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import tw from "tailwind-styled-components";
 import { getLatestMessage, socketEvents } from "../constants";
 import { socket } from "../context/socket";
-import useChats from "../custom-hooks/useChats";
 import loadActions from "../redux/actions/LoadAction";
 import promptActions from "../redux/actions/PromptAction";
 import userActions from "../redux/actions/UserAction";
+import { RootState } from "../redux/reducers/allReducer";
+import { Chat } from "../redux/reducers/UserReducer";
 
 const RecentMessage = tw.small`
     ${props => props.textColor || "text-gray-500"}
 `;
 
-const Chat = tw.div`
+const Display = tw.div`
     py-4 
     px-16 
     border-b
@@ -23,20 +24,27 @@ const Chat = tw.div`
     overflow-hidden
 `;
 
-function ChatPreview({ title, latestMsg, onClick }) {
+interface ChatDisplay {
+    _id: string
+    title: string
+    onClick: Function
+}
+
+function ChatPreview({ title, onClick, ...props }: ChatDisplay) {
     return (
-        <Chat onClick={onClick}>
+        <Display onClick={onClick} {...props}>
             <h1>{title}</h1>
-            <RecentMessage>
-                {latestMsg}
-            </RecentMessage>
-        </Chat>
+        </Display>
     );
 }
 
-export default function ChatList({ chats }) {
+interface Props {
+    input: string
+}
+
+export default function ChatList({ input }: Props) {
     const dispatch = useDispatch();
-    const userInfo = useChats();
+    const { chats, user, chosenChatId } = useSelector((state: RootState) => state.userReducer);
     const { 
         NON_ADMIN_UPDATE_CHAT, 
         ON_JOIN_CHAT, 
@@ -45,14 +53,29 @@ export default function ChatList({ chats }) {
         ON_DELETE_CHAT_NON_ADMIN 
     } = socketEvents;
 
+    const list: ChatDisplay[] = chats.map((chat: Chat) => {
+        return {
+            ...chat,
+            latestMsg: getLatestMessage(chat.messages, user._id),
+            onClick: () => dispatch(userActions.chooseChat(chat._id))
+        };
+    }).filter((chat: ChatDisplay) => {
+        const chatTitleToCheck = chat.title.trim().toLowerCase();
+        const desiredChatTitle = input.trim().toLowerCase();
+        return chatTitleToCheck.includes(desiredChatTitle);
+    });
+    
     useEffect(() => {
-        socket.on(NON_ADMIN_UPDATE_CHAT, (updatedChat) => {
+        socket.on(NON_ADMIN_UPDATE_CHAT, (updatedChat: Chat) => {
             // Update the chat list with the updated chat
-            chats.some((existingChat, index: number) => {
+            chats.some((existingChat: Chat, index: number) => {
                 if(existingChat._id === updatedChat._id){
-                    dispatch(userActions.setChats([
+                    dispatch(userActions.setChatList([
                         ...chats.slice(0, index),
-                        updatedChat,
+                        {
+                            ...existingChat,
+                            title: updatedChat.title
+                        },
                         ...chats.slice(index + 1)
                     ]));
                     return true;
@@ -61,47 +84,34 @@ export default function ChatList({ chats }) {
             });
         });
 
-        socket.on(ON_JOIN_CHAT, (data) => {
+        socket.on(ON_JOIN_CHAT, ({ invitedUsernameList, chat }: { invitedUsernameList: string[], chat: Chat }) => {
             // After being added to chat, update chat preview list
-            const { invitedUsernameList, chat } = data;
-            const isInvited = invitedUsernameList.some(username => userInfo.user.username === username);
-            const isAlreadyInChatList = chats.some(existingChat => existingChat._id === chat._id);
+            const isInvited = invitedUsernameList.some(username => user.username === username);
+            const isAlreadyInChatList = chats.some((existingChat: Chat) => existingChat._id === chat._id);
             if(isInvited && !isAlreadyInChatList) {
-                dispatch(userActions.setChats([...chats, chat]));
+                dispatch(userActions.setChatList([...chats, chat]))
             }
         });
 
-        socket.on(SEND_MESSAGE_SUCCESS, (updatedChat) => {
-            dispatch(userActions.setChats(
-                // Update chat list to display new message as latest message
-                chats.map(chat => (updatedChat._id === chat._id) 
-                    ?   { 
-                            ...chat, 
-                            latestMsg: getLatestMessage(updatedChat.messages, userInfo.user._id) 
-                        }
-                    : chat
-                )
-            ));
+        socket.on(SEND_MESSAGE_SUCCESS, (updatedChat: Chat) => {
+            dispatch(userActions.setChatList(chats.map((chat: Chat) => {
+                if(updatedChat._id === chat._id) { 
+                    return updatedChat;
+                }
+                return chat;
+            })));
         });
 
         socket.on(ON_DELETE_CHAT_ADMIN, (chatId: string) => {
             dispatch(loadActions.success(""));
             dispatch(promptActions.close());
-            dispatch(userActions.setAll(
-                userInfo.user,
-                chats.filter(chat => chat._id !== chatId),
-                null,
-                "",
-            ));
+            dispatch(userActions.setChatList(chats.filter(({ _id }: Chat) => _id !== chatId)));
+            dispatch(userActions.chooseChat(""));
         });
 
         socket.on(ON_DELETE_CHAT_NON_ADMIN, (chatId: string) => {
-            dispatch(userActions.setAll(
-                userInfo.user,
-                chats.filter(chat => chat._id !== chatId),
-                (userInfo.chosenChat && userInfo.chosenChat._id === chatId) ? null : userInfo.chosenChat,
-                "",
-            ));
+            dispatch(userActions.setChatList(chats.filter(({ _id }: Chat) => _id !== chatId)));
+            dispatch(userActions.chooseChat((chosenChatId === chatId) ? "" : chosenChatId));
         });
 
         () => socket.close();
@@ -109,7 +119,14 @@ export default function ChatList({ chats }) {
 
     return (
         <>
-            { chats.map(chat => <ChatPreview {...chat} />) }
+            { 
+                list.map((chatPreview: ChatDisplay) => (
+                    <ChatPreview 
+                        key={chatPreview._id} 
+                        {...chatPreview} 
+                    />
+                )) 
+            }
         </>
     );
 }

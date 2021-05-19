@@ -2,12 +2,13 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import tw from "tailwind-styled-components";
 import ChatService from "../api/services/ChatService";
-import { getLatestMessage } from "../constants";
 import loadActions from "../redux/actions/LoadAction";
 import promptActions from "../redux/actions/PromptAction";
 import userActions from "../redux/actions/UserAction";
 import { RootState } from "../redux/reducers/allReducer";
 import { prompt } from "../constants";
+import { Chat } from "../redux/reducers/UserReducer";
+import { PromptState } from "../redux/reducers/PromptReducer";
 
 const CreateChatButton = tw.button`
     text-white 
@@ -28,16 +29,11 @@ function useCreateChatResponses(userId: string) {
     /**
      * Response to successfully creating chat.
      * 
-     * @param {any[]} chats Chat list.
-     * @param {any} newChat Created chat. 
+     * @param {Chat[]} chats Chat list.
+     * @param {Chat} newChat Created chat. 
      */
-    function onCreateChat(chats: any[], newChat: any) {
-        const newChatPreview = {
-            ...newChat,
-            latestMsg: getLatestMessage(newChat.messages, userId),
-            onClick: () => dispatch(userActions.chooseChat(newChat._id))
-        };
-        dispatch(userActions.setChats([...chats, newChatPreview]));
+    function onCreateChat(chats: Chat[], newChat: Chat) {
+        dispatch(userActions.setChatList([...chats, newChat]));
         dispatch(loadActions.success("Chat created."))
         dispatch(promptActions.close());
         dispatch(userActions.chooseChat(newChat._id));
@@ -75,14 +71,14 @@ function useCreateChatResponses(userId: string) {
  * create a new chat.
  * 
  * @param {string} userId User id.
- * @param {any[]} chats Chat list.
+ * @param {Chat[]} chats Chat list.
  * @returns {any} Prompt props.
  */
-export default function useCreateChatPrompt(userId : string, chats: any[]) {
+export default function useCreateChatPrompt(userId : string, chats: Chat[]) {
     const dispatch = useDispatch();
-    const { open, promptToOpen } = useSelector((state: RootState) => state.promptReducer);
+    const { open, promptToOpen }: PromptState = useSelector((state: RootState) => state.promptReducer);
     const { success, error, isPending } = useSelector((state: RootState) => state.loadReducer);
-    const [chatName, setChatName] = useState("");
+    const [chatName, setChatName] = useState("" as string);
     const { onCreateChat, onCreateChatError, onCreatingChat } = useCreateChatResponses(userId);
 
     /**

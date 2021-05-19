@@ -5,6 +5,7 @@ import useDeleteChatPrompt from "./useDeleteChatPrompt";
 import useLeaveChatPrompt from "./useLeaveChatPrompt";
 import useUpdateChatPrompt from "./useUpdateChatPrompt";
 import { prompt } from "../constants";
+import { CurrentChat } from "../views/ChosenChat";
 
 /**
  * Custom hook for choosing which prompt to use.
@@ -12,13 +13,14 @@ import { prompt } from "../constants";
  * @param {any} chat Chosen chat. 
  * @returns {any} Prompt props.
  */
-export default function usePrompt(chat: any) {
+export default function usePrompt(chat: CurrentChat) {
     const { promptToOpen } = useSelector((state: RootState) => state.promptReducer);
+    const { _id } = chat;
     const prompts = {
-        addUser: useAddUserPrompt(chat._id),
-        leaveChat: useLeaveChatPrompt(chat._id),
+        addUser: useAddUserPrompt(_id),
+        leaveChat: useLeaveChatPrompt(_id),
         updateChat: useUpdateChatPrompt(chat),
-        deleteChat: useDeleteChatPrompt(chat)
+        deleteChat: useDeleteChatPrompt(_id)
     };
     let modal = prompts.addUser;
 
