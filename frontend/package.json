@@ -1,0 +1,37 @@
+{
+  "name": "chatterus",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start -p $PORT",
+    "docker-build": "docker build -t chatterus-frontend .",
+    "docker-run": "docker run -p 3000:3000 chatterus-frontend",
+    "docker-start": "npm run docker-build && npm run docker-run"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.11.3",
+    "@types/react-redux": "^7.1.16",
+    "axios": "^0.21.1",
+    "date-fns": "^2.19.0",
+    "next": "10.0.6",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-helmet": "^6.1.0",
+    "react-redux": "^7.2.2",
+    "redux": "^4.0.5",
+    "socket.io-client": "^3.1.2",
+    "styled-components": "^5.2.1",
+    "styled-icons": "^10.28.0",
+    "tailwind-styled-components": "^1.0.7"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.27",
+    "@types/react": "^17.0.2",
+    "autoprefixer": "^10.2.4",
+    "postcss": "^8.2.6",
+    "tailwindcss": "^2.0.3",
+    "typescript": "^4.1.5"
+  }
+}
