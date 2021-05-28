@@ -27,6 +27,9 @@ on:
   push:
     branches:
       - master
+    paths:
+      - backend/**
+      - .github/workflows/production-backend.yml
 
 name: Deploy to Amazon ECS
 
