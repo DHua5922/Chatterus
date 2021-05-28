@@ -26,7 +26,7 @@
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - backend/**
       - .github/workflows/production-backend.yml
